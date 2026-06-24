@@ -11,7 +11,7 @@ public interface FinanceGateway {
 
     User saveUser(User user);
     Optional<User> findUserById(UUID userId);
-    Optional<User> findUserByTelegramId(String telegramId); // CRÍTICO: Seu bot vai precisar desse aqui!
+    Optional<User> findUserByTelegramId(String telegramId); // bot vai precisar desse método
 
     Optional<Category> findCategoryById(UUID categoryId);
 
