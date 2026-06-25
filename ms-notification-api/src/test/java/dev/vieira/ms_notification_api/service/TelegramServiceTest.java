@@ -12,11 +12,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.amqp.AmqpException;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 
 import java.util.Set;
 
-import static dev.vieira.ms_notification_api.config.RabbitMQConfig.EXCHANGE_TELEGRAM;
 import static dev.vieira.ms_notification_api.config.RabbitMQConfig.ROUTING_KEY_TELEGRAM;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.eq;
@@ -29,7 +27,7 @@ public class TelegramServiceTest {
     private Validator validator;
 
     @Mock
-    private RabbitTemplate rabbitTemplate;
+    private MessageService messageService;
 
     @InjectMocks
     private TelegramServiceImpl telegramServiceImpl;
@@ -45,8 +43,7 @@ public class TelegramServiceTest {
         telegramServiceImpl.processTelegramMessage(dto);
 
         //Assert
-        verify(rabbitTemplate, times(1)).convertAndSend(
-                eq(EXCHANGE_TELEGRAM),
+        verify(messageService, times(1)).sendMessage(
                 eq(ROUTING_KEY_TELEGRAM),
                 eq(dto)
         );
@@ -58,9 +55,8 @@ public class TelegramServiceTest {
         var dto = mockTelegramDto();
 
         doThrow(new AmqpException("Broker unavailable"))
-                .when(rabbitTemplate)
-                .convertAndSend(
-                        eq(EXCHANGE_TELEGRAM),
+                .when(messageService)
+                .sendMessage(
                         eq(ROUTING_KEY_TELEGRAM),
                         eq(dto)
                 );
@@ -88,8 +84,7 @@ public class TelegramServiceTest {
         telegramServiceImpl.processTelegramMessage(dto);
 
         // Assert
-        verify(rabbitTemplate, never()).convertAndSend(
-                anyString(),
+        verify(messageService, never()).sendMessage(
                 anyString(),
                 anyString()
         );
