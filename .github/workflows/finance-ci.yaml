@@ -1,10 +1,14 @@
-name: Java CI with Maven
+name: Finance API CI
 
 on:
   push:
     branches: [ "main", "develop" ]
+    paths:
+      - 'ms-finance-api/**' # SÓ roda se houver mudanças nesta pasta
   pull_request:
     branches: [ "main" ]
+    paths:
+      - 'ms-finance-api/**'
 
 jobs:
   build-and-test:
@@ -23,3 +27,4 @@ jobs:
 
       - name: Compilar e Rodar Testes com Maven
         run: mvn clean test
+        working-directory: ./ms-finance-api # Entra na pasta do finance antes de rodar o comando
