@@ -8,23 +8,24 @@ public class User {
     private final UUID id;
     private String name;
     private final String email;
-    private String telegramId;
     private String linkCode;
     private LocalDateTime codeExpiresAt;
     private LocalDateTime created_at;
+    private Long chatId;
 
-    public User(String nome, String email) {
+    public User(String nome, String email, Long chatId) {
         this.id = UUID.randomUUID();
         this.name = nome;
         this.email = email;
         this.created_at = LocalDateTime.now();
+        this.chatId = chatId;
     }
 
-    public User(UUID id, String name, String email, String telegramId, String linkCode, LocalDateTime codeExpiresAt) {
+    public User(UUID id, Long chatId, String name, String email, String telegramId, String linkCode, LocalDateTime codeExpiresAt) {
         this.id = id;
+        this.chatId = chatId;
         this.name = name;
         this.email = email;
-        this.telegramId = telegramId;
         this.linkCode = linkCode;
         this.codeExpiresAt = codeExpiresAt;
     }
@@ -38,12 +39,12 @@ public class User {
         this.codeExpiresAt = LocalDateTime.now().plusMinutes(15);
     }
 
-    public boolean linkTelegramUser(String code, String telegramId) {
+    public boolean linkTelegramUser(String code, Long telegramId) {
         if (this.linkCode != null
                 && this.linkCode.equals(code)
                 && LocalDateTime.now().isBefore(this.codeExpiresAt)) {
 
-            this.telegramId = telegramId;
+            this.chatId = telegramId;
             this.linkCode = null; // Invalida o código após o uso
             this.codeExpiresAt = null;
             return true;
@@ -63,15 +64,19 @@ public class User {
         return email;
     }
 
-    public String getTelegramId() {
-        return telegramId;
-    }
-
     public String getLinkCode() {
         return linkCode;
     }
 
     public LocalDateTime getCodeExpiresAt() {
         return codeExpiresAt;
+    }
+
+    public LocalDateTime getCreated_at() {
+        return created_at;
+    }
+
+    public Long getChatId() {
+        return chatId;
     }
 }

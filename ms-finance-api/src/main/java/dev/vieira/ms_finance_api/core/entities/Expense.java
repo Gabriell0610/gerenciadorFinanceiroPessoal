@@ -13,33 +13,28 @@ public class Expense {
     private LocalDateTime dateExpense;
     private String messageUser;
     private String description;
+    private LocalDateTime created_at;
 
-    public Expense(UUID userId, UUID categoryId, BigDecimal amount, String messageUser, String description) {
+    public Expense(UUID userId, BigDecimal amount, String messageUser, String description) {
         this.id = UUID.randomUUID(); // Sistema gera o ID único agora
         this.userId = userId;
-        this.categoryId = categoryId;
         this.amount = amount;
-        this.dateExpense = LocalDateTime.now(); // Sistema captura o momento exato do gasto automaticamente
         this.messageUser = messageUser;
         this.description = description;
+        this.created_at = LocalDateTime.now();
+        this.dateExpense = LocalDateTime.now();
     }
 
-    public Expense(UUID id, UUID userId, UUID categoryId, BigDecimal amount, LocalDateTime dateExpense, String messageUser, String description) {
+    public Expense(UUID id, UUID userId, BigDecimal amount, String messageUser, String description) {
         this.id = id; // Mantém o ID que veio do banco
         this.userId = userId;
-        this.categoryId = categoryId;
         this.amount = amount;
-        this.dateExpense = dateExpense; // Mantém a data original do banco
         this.messageUser = messageUser;
         this.description = description;
     }
 
     public UUID getId() {
         return id;
-    }
-
-    public UUID getCategoryId() {
-        return categoryId;
     }
 
     public UUID getUserId() {
@@ -60,5 +55,9 @@ public class Expense {
 
     public String getDescription() {
         return description;
+    }
+
+    public LocalDateTime getCreated_at() {
+        return created_at;
     }
 }
