@@ -2,5 +2,8 @@
 <project version="4">
   <component name="SqlDialectMappings">
     <file url="file://$PROJECT_DIR$/ms-finance-api/src/main/resources/db/migration/V2__remove__telegramId__column.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/ms-finance-api/src/main/resources/db/migration/V3__add__installment__column.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/ms-finance-api/src/main/resources/db/migration/V4__update__installment__column.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/ms-finance-api/src/main/resources/db/migration/V5__create__table__report.sql" dialect="GenericSQL" />
   </component>
 </project>

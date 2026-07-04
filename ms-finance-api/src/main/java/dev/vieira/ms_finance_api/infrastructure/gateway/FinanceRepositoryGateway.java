@@ -3,15 +3,21 @@ package dev.vieira.ms_finance_api.infrastructure.gateway;
 
 import dev.vieira.ms_finance_api.core.entities.Category;
 import dev.vieira.ms_finance_api.core.entities.Expense;
+import dev.vieira.ms_finance_api.core.entities.Report;
 import dev.vieira.ms_finance_api.core.entities.User;
 import dev.vieira.ms_finance_api.core.gateway.FinanceGateway;
+import dev.vieira.ms_finance_api.infrastructure.mapper.UserMapper;
 import dev.vieira.ms_finance_api.infrastructure.persistence.expense.ExpenseEntity;
 import dev.vieira.ms_finance_api.infrastructure.persistence.expense.ExpenseRepository;
+import dev.vieira.ms_finance_api.infrastructure.persistence.report.ReportEntity;
+import dev.vieira.ms_finance_api.infrastructure.persistence.report.ReportRepository;
 import dev.vieira.ms_finance_api.infrastructure.persistence.user.UserEntity;
 import dev.vieira.ms_finance_api.infrastructure.persistence.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -21,6 +27,8 @@ public class FinanceRepositoryGateway implements FinanceGateway {
 
     private final ExpenseRepository expenseRepository;
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
+    private final ReportRepository reportRepository;
 
     @Override
     public User saveUser(User user) {
@@ -44,8 +52,12 @@ public class FinanceRepositoryGateway implements FinanceGateway {
     }
 
     @Override
-    public Optional<User> findUserByTelegramId(String telegramId) {
-        return Optional.empty();
+    public Optional<User> findUserByChatId(Long chatId) {
+        var result =  userRepository.findUserByChatId(chatId)
+                .map(userMapper::toDomain);
+
+        System.out.println("FinanceRepositoryGateway.findUserByChatId: result = " + result);
+        return result;
     }
 
     @Override
@@ -60,6 +72,7 @@ public class FinanceRepositoryGateway implements FinanceGateway {
         var userRef = UserEntity.builder()
                 .id(expense.getUserId())
                 .build();
+
         var expenseEntity = ExpenseEntity.builder()
                 .id(expense.getId())
                 .dateExpense(expense.getDateExpense())
@@ -67,6 +80,7 @@ public class FinanceRepositoryGateway implements FinanceGateway {
                 .description(expense.getDescription())
                 .messageUser(expense.getMessageUser())
                 .created_at(expense.getCreated_at())
+                .installment(expense.getInstallment())
                 .user(userRef)
                 .build();
 
@@ -77,5 +91,69 @@ public class FinanceRepositoryGateway implements FinanceGateway {
     @Override
     public Optional<Expense> findExpenseById(UUID expenseId) {
         return Optional.empty();
+    }
+
+    @Override
+    public List<Expense> findAllReportsByUserId(UUID userId) {
+        return expenseRepository.findAllByUserId(userId)
+                .stream()
+                .map(expenseEntity -> new Expense(
+                        expenseEntity.getId(),
+                        expenseEntity.getUser().getId(),
+                        expenseEntity.getAmount(),
+                        expenseEntity.getMessageUser(),
+                        expenseEntity.getDescription(),
+                        expenseEntity.getInstallment(),
+                        expenseEntity.getDateExpense(),
+                        expenseEntity.getCreated_at()
+                ))
+                .toList();
+    }
+
+    @Override
+    public Report saveReport(Report report) {
+        var userRef = UserEntity.builder()
+                .id(report.getUserId())
+                .build();
+
+        var reportEntity = ReportEntity.builder()
+                .id(report.getId())
+                .user(userRef)
+                .competency(report.getCompetency())
+                .totalExpenses(report.getTotalExpenses())
+                .totalInstallments(report.getTotalInstallments())
+                .grandTotal(report.getGrandTotal())
+                .itemCount(report.getItemCount())
+                .generatedAt(report.getGeneratedAt())
+                .updatedAt(report.getUpdatedAt())
+                .status(report.getStatus())
+                .isNew(report.isNew())
+                .build();
+
+        reportRepository.save(reportEntity);
+
+        return report;
+    }
+
+    @Override
+    public Report findReportByUserId(UUID userId) {
+        return null;
+    }
+
+    @Override
+    public Optional<Report> findReportByUserAndCompetency(UUID userId, LocalDate competency) {
+        return reportRepository.findReportByUserIdAndCompetency(userId, competency)
+                .map(entity -> new Report(
+                        entity.getId(),
+                        entity.getUser().getId(),
+                        entity.getCompetency(),
+                        entity.getTotalExpenses(),
+                        entity.getStatus(),
+                        entity.getTotalInstallments(),
+                        entity.getGrandTotal(),
+                        entity.getItemCount(),
+                        entity.getGeneratedAt(),
+                        entity.getUpdatedAt()
+                ));
     }
 }

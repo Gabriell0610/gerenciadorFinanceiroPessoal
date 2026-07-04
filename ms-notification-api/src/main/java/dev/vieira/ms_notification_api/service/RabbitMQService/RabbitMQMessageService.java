@@ -6,7 +6,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
-import static dev.vieira.ms_notification_api.config.RabbitMQConfig.EXCHANGE_TELEGRAM;
+import static dev.vieira.ms_notification_api.config.RabbitMQConfig.EXCHANGE;
 
 @Service
 @Profile("dev")
@@ -19,7 +19,7 @@ public class RabbitMQMessageService implements MessageService {
     public void sendMessage(String destination, Object message) {
         System.out.println("[RabbitMQ] Enviando mensagem para a exchange/routing key: " + destination);
         rabbitTemplate.convertAndSend(
-                EXCHANGE_TELEGRAM,
+                EXCHANGE,
                 destination,
                 message
 

@@ -7,15 +7,15 @@ import java.util.UUID;
 public class Expense {
 
     private final UUID id;
-    private UUID categoryId;
     private UUID userId;
     private BigDecimal amount;
     private LocalDateTime dateExpense;
     private String messageUser;
     private String description;
     private LocalDateTime created_at;
+    private Integer installment;
 
-    public Expense(UUID userId, BigDecimal amount, String messageUser, String description) {
+    public Expense(UUID userId, BigDecimal amount, String messageUser, String description, Integer installment) {
         this.id = UUID.randomUUID(); // Sistema gera o ID único agora
         this.userId = userId;
         this.amount = amount;
@@ -23,14 +23,18 @@ public class Expense {
         this.description = description;
         this.created_at = LocalDateTime.now();
         this.dateExpense = LocalDateTime.now();
+        this.installment = installment;
     }
 
-    public Expense(UUID id, UUID userId, BigDecimal amount, String messageUser, String description) {
+    public Expense(UUID id, UUID userId, BigDecimal amount, String messageUser, String description, Integer installment,LocalDateTime dateExpense, LocalDateTime created_at ) {
         this.id = id; // Mantém o ID que veio do banco
         this.userId = userId;
         this.amount = amount;
         this.messageUser = messageUser;
         this.description = description;
+        this.installment = installment;
+        this.dateExpense = dateExpense;
+        this.created_at  =  created_at;
     }
 
     public UUID getId() {
@@ -59,5 +63,23 @@ public class Expense {
 
     public LocalDateTime getCreated_at() {
         return created_at;
+    }
+
+    public Integer getInstallment() {
+        return installment;
+    }
+
+    @Override
+    public String toString() {
+        return "Expense{" +
+                "id=" + id +
+                ", userId=" + userId +
+                ", amount=" + amount +
+                ", dateExpense=" + dateExpense +
+                ", messageUser='" + messageUser + '\'' +
+                ", description='" + description + '\'' +
+                ", created_at=" + created_at +
+                ", installment=" + installment +
+                '}';
     }
 }

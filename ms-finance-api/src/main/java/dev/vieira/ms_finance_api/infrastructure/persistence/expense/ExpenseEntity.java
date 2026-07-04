@@ -36,6 +36,9 @@ public class ExpenseEntity implements Persistable<UUID> {
     @Column(nullable = false)
     private LocalDateTime created_at;
 
+    @Column(nullable = false, columnDefinition = "INTEGER DEFAULT 1")
+    private Integer installment;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;

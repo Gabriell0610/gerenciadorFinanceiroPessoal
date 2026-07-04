@@ -5,6 +5,6 @@ import java.math.BigDecimal;
 public record ParsedExpenseDto(
         String nome,
         BigDecimal valor,
-        Integer parcelas) {
+        int parcelas) {
     
 }

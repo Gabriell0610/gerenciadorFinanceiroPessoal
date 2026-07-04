@@ -9,25 +9,5 @@ import java.time.LocalDateTime;
 @Component
 public class ExpenseCreateMapper {
 
-    public expenseCreateRequest toDto(Expense expense) {
-        return new expenseCreateRequest(
-                expense.getDescription(),
-                expense.getAmount(),
-                expense.getMessageUser(),
-                expense.getUserId()
-        );
-
-    }
-
-    public Expense toEntity(expenseCreateRequest expenseCreateRequest) {
-        return new Expense(
-                expenseCreateRequest.userId(),
-                expenseCreateRequest.amount(),
-                expenseCreateRequest.messageUser(),
-                expenseCreateRequest.description()
-        );
-
-    }
-
 
 }

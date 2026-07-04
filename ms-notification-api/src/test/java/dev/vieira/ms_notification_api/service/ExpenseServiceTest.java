@@ -3,7 +3,7 @@ package dev.vieira.ms_notification_api.service;
 import dev.vieira.ms_notification_api.dto.TelegramChatDto;
 import dev.vieira.ms_notification_api.dto.TelegramMessageDto;
 import dev.vieira.ms_notification_api.dto.TelegramUpdateDto;
-import dev.vieira.ms_notification_api.service.TelegramService.TelegramServiceImpl;
+import dev.vieira.ms_notification_api.service.ExpenseService.ExpenseServiceImpl;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import org.junit.jupiter.api.Test;
@@ -15,13 +15,13 @@ import org.springframework.amqp.AmqpException;
 
 import java.util.Set;
 
-import static dev.vieira.ms_notification_api.config.RabbitMQConfig.ROUTING_KEY_TELEGRAM;
+import static dev.vieira.ms_notification_api.config.RabbitMQConfig.ROUTING_KEY_EXPENSE;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class TelegramServiceTest {
+public class ExpenseServiceTest {
 
     @Mock
     private Validator validator;
@@ -30,7 +30,7 @@ public class TelegramServiceTest {
     private MessageService messageService;
 
     @InjectMocks
-    private TelegramServiceImpl telegramServiceImpl;
+    private ExpenseServiceImpl expenseServiceImpl;
 
 
     @Test
@@ -40,11 +40,11 @@ public class TelegramServiceTest {
         var dto = mockTelegramDto();
 
         //Act
-        telegramServiceImpl.processTelegramMessage(dto);
+        expenseServiceImpl.execute(dto);
 
         //Assert
         verify(messageService, times(1)).sendMessage(
-                eq(ROUTING_KEY_TELEGRAM),
+                eq(ROUTING_KEY_EXPENSE),
                 eq(dto)
         );
     }
@@ -57,13 +57,13 @@ public class TelegramServiceTest {
         doThrow(new AmqpException("Broker unavailable"))
                 .when(messageService)
                 .sendMessage(
-                        eq(ROUTING_KEY_TELEGRAM),
+                        eq(ROUTING_KEY_EXPENSE),
                         eq(dto)
                 );
 
         // Act & Assert
         assertThrows(AmqpException.class,
-                () -> telegramServiceImpl.processTelegramMessage(dto));
+                () -> expenseServiceImpl.execute(dto));
     }
 
     @Test
@@ -81,7 +81,7 @@ public class TelegramServiceTest {
         when(validator.validate(dto)).thenReturn(Set.of(violation));
 
         // Act
-        telegramServiceImpl.processTelegramMessage(dto);
+        expenseServiceImpl.execute(dto);
 
         // Assert
         verify(messageService, never()).sendMessage(

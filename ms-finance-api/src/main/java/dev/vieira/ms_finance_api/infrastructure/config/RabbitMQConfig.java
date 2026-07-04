@@ -8,7 +8,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMQConfig {
 
-    public static final String QUEUE_TELEGRAM = "telegram.messages.queue";
+    public static final String QUEUE_EXPENSE = "expense.queue";
+    public static final String QUEUE_REPORT = "report.queue";
 
     @Bean
     public JacksonJsonMessageConverter messageConverter() {

@@ -1,6 +1,7 @@
 package dev.vieira.ms_finance_api.infrastructure.persistence.user;
 
 import dev.vieira.ms_finance_api.infrastructure.persistence.expense.ExpenseEntity;
+import dev.vieira.ms_finance_api.infrastructure.persistence.report.ReportEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.domain.Persistable;
@@ -37,6 +38,9 @@ public class UserEntity  implements Persistable<UUID> {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ExpenseEntity> expenses;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ReportEntity> reports;
 
     @Transient
     @Builder.Default

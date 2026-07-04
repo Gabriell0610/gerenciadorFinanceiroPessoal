@@ -21,13 +21,14 @@ public class User {
         this.chatId = chatId;
     }
 
-    public User(UUID id, Long chatId, String name, String email, String telegramId, String linkCode, LocalDateTime codeExpiresAt) {
+    public User(UUID id, Long chatId, String name, String email, String linkCode, LocalDateTime codeExpiresAt, LocalDateTime created_at) {
         this.id = id;
         this.chatId = chatId;
         this.name = name;
         this.email = email;
         this.linkCode = linkCode;
         this.codeExpiresAt = codeExpiresAt;
+        this.created_at = created_at;
     }
 
     // Regra de Negócio: Gerar código de 6 dígitos para o Telegram

@@ -1,5 +1,6 @@
-package dev.vieira.ms_finance_api.core.usecases;
+package dev.vieira.ms_finance_api.core.usecases.user;
 
+import dev.vieira.ms_finance_api.core.dto.TelegramDto.TelegramUpdateDto;
 import dev.vieira.ms_finance_api.core.entities.User;
 import dev.vieira.ms_finance_api.core.gateway.FinanceGateway;
 
@@ -12,9 +13,11 @@ public class SaveUserImpl implements SaveUserUseCase {
     }
 
     @Override
-    public User execute(User user) {
-        var saveUser = financeGateway.saveUser(user);
-        return saveUser;
+    public User execute(TelegramUpdateDto payload) {
+        User user = new User(payload.message().chat().first_name(), null, payload.message().chat().id());
+
+        return financeGateway.saveUser(user);
+
     }
 
 }
