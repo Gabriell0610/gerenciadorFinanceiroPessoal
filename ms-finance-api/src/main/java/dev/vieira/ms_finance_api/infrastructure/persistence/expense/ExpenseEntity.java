@@ -39,6 +39,8 @@ public class ExpenseEntity implements Persistable<UUID> {
     @Column(nullable = false, columnDefinition = "INTEGER DEFAULT 1")
     private Integer installment;
 
+    private String category;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;

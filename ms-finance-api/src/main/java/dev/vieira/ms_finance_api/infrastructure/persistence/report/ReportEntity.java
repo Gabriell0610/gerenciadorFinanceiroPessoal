@@ -30,10 +30,6 @@ public class ReportEntity implements Persistable<UUID> {
     @Column(name = "competency", nullable = false)
     private LocalDate competency;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private ReportStatus status;
-
     @Column(name = "total_expenses", nullable = false)
     private BigDecimal totalExpenses;
 

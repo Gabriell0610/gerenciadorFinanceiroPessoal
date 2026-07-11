@@ -1,18 +1,16 @@
 package dev.vieira.ms_finance_api.infrastructure.beans;
 
 
+import dev.vieira.ms_finance_api.core.gateway.ExpenseExporterGateway;
 import dev.vieira.ms_finance_api.core.gateway.FinanceGateway;
-import dev.vieira.ms_finance_api.core.usecases.expense.FindAllReportsByUserIdImpl;
-import dev.vieira.ms_finance_api.core.usecases.expense.FindAllReportsByUserIdUseCase;
-import dev.vieira.ms_finance_api.core.usecases.expense.SaveExpenseImpl;
-import dev.vieira.ms_finance_api.core.usecases.expense.SaveExpenseUseCase;
-import dev.vieira.ms_finance_api.core.usecases.message.ProcessMessageImpl;
-import dev.vieira.ms_finance_api.core.usecases.message.ProcessMessageUseCase;
-import dev.vieira.ms_finance_api.core.usecases.report.*;
-import dev.vieira.ms_finance_api.core.usecases.user.FindUserByChatIdImpl;
-import dev.vieira.ms_finance_api.core.usecases.user.FindUserByChatIdUseCase;
-import dev.vieira.ms_finance_api.core.usecases.user.SaveUserImpl;
-import dev.vieira.ms_finance_api.core.usecases.user.SaveUserUseCase;
+import dev.vieira.ms_finance_api.core.useCase.expense.*;
+import dev.vieira.ms_finance_api.core.useCase.process.ProcessMessageImpl;
+import dev.vieira.ms_finance_api.core.useCase.process.ProcessMessageUseCase;
+import dev.vieira.ms_finance_api.core.useCase.report.*;
+import dev.vieira.ms_finance_api.core.useCase.user.FindUserByChatIdImpl;
+import dev.vieira.ms_finance_api.core.useCase.user.FindUserByChatIdUseCase;
+import dev.vieira.ms_finance_api.core.useCase.user.SaveUserImpl;
+import dev.vieira.ms_finance_api.core.useCase.user.SaveUserUseCase;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -20,8 +18,8 @@ import org.springframework.context.annotation.Configuration;
 public class BeanConfiguration {
 
     @Bean
-    public ProcessMessageUseCase processMessageTelegramUseCase(SaveUserUseCase saveUserUseCase, SaveExpenseUseCase saveExpenseUseCase, ProcessReportUseCase processReportUseCase, FindUserByChatIdUseCase findUserByChatIdUseCase) {
-        return new ProcessMessageImpl(saveUserUseCase, saveExpenseUseCase, processReportUseCase, findUserByChatIdUseCase);
+    public ProcessMessageUseCase processMessageTelegramUseCase(SaveUserUseCase saveUserUseCase, SaveExpenseUseCase saveExpenseUseCase, ProcessReportUseCase processReportUseCase, FindUserByChatIdUseCase findUserByChatIdUseCase, ExpenseExporterGateway expenseExporterGateway) {
+        return new ProcessMessageImpl(saveUserUseCase, saveExpenseUseCase, processReportUseCase, findUserByChatIdUseCase, expenseExporterGateway);
     }
 
     @Bean
@@ -35,8 +33,8 @@ public class BeanConfiguration {
     }
 
     @Bean
-    public ProcessReportUseCase processReportUseCase(FindUserByChatIdUseCase findUserByChatIdUseCase, FindAllReportsByUserIdUseCase findAllReportsByUserIdUseCase,  SaveReportUseCase saveReportUseCase, FindReportByUserAndCompetencyUseCase findReportByUserAndCompetencyUseCase) {
-        return new ProcessReportImpl(findUserByChatIdUseCase, findAllReportsByUserIdUseCase, saveReportUseCase, findReportByUserAndCompetencyUseCase);
+    public ProcessReportUseCase processReportUseCase(FindUserByChatIdUseCase findUserByChatIdUseCase, FindAllExpenseByUserIdUseCase findAllExpenseByUserIdUseCase,  SaveReportUseCase saveReportUseCase, FindReportByUserAndCompetencyUseCase findReportByUserAndCompetencyUseCase,  SendNotificationUseCase sendNotificationUseCase) {
+        return new ProcessReportImpl(findUserByChatIdUseCase, findAllExpenseByUserIdUseCase, saveReportUseCase, findReportByUserAndCompetencyUseCase,sendNotificationUseCase);
     }
 
     @Bean
@@ -56,8 +54,12 @@ public class BeanConfiguration {
     }
 
     @Bean
-    FindAllReportsByUserIdUseCase findAllReportsByUserIdUseCase(FinanceGateway financeGateway) {
-        return new FindAllReportsByUserIdImpl(financeGateway);
+    FindAllExpenseByUserIdUseCase findAllExpenseByUserIdUseCase(FinanceGateway financeGateway) {
+        return new FindAllExpenseByUserIdImpl(financeGateway);
+    }
+
+    @Bean SendNotificationUseCase sendNotificationUseCase(FinanceGateway financeGateway) {
+        return new SendNotification(financeGateway);
     }
 
 }

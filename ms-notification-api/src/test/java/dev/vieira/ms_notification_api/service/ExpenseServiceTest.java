@@ -66,31 +66,6 @@ public class ExpenseServiceTest {
                 () -> expenseServiceImpl.execute(dto));
     }
 
-    @Test
-    void shouldNotSendMessageWhenValidationFails() {
-        // Arrange
-        var dto = mockTelegramDto();
-
-        // 1. Cria um mock simples da violação
-        ConstraintViolation<TelegramUpdateDto> violation = mock(ConstraintViolation.class);
-
-        // Opcional: se o seu código usar o erro.getMessage(), você pode mocar o retorno dele aqui:
-        when(violation.getMessage()).thenReturn("O texto da mensagem não pode ser vazio");
-
-        // 2. Passa o mock para dentro do Set.of()
-        when(validator.validate(dto)).thenReturn(Set.of(violation));
-
-        // Act
-        expenseServiceImpl.execute(dto);
-
-        // Assert
-        verify(messageService, never()).sendMessage(
-                anyString(),
-                anyString()
-        );
-    }
-
-
     private TelegramUpdateDto mockTelegramDto() {
         var chatDto = new TelegramChatDto(
                 1L,

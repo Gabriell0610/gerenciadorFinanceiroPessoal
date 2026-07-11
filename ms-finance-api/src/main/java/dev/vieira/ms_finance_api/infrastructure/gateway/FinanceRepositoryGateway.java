@@ -1,6 +1,7 @@
 package dev.vieira.ms_finance_api.infrastructure.gateway;
 
 
+import dev.vieira.ms_finance_api.core.dto.Report.NotificationResponseDto;
 import dev.vieira.ms_finance_api.core.entities.Category;
 import dev.vieira.ms_finance_api.core.entities.Expense;
 import dev.vieira.ms_finance_api.core.entities.Report;
@@ -14,12 +15,16 @@ import dev.vieira.ms_finance_api.infrastructure.persistence.report.ReportReposit
 import dev.vieira.ms_finance_api.infrastructure.persistence.user.UserEntity;
 import dev.vieira.ms_finance_api.infrastructure.persistence.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+import static dev.vieira.ms_finance_api.infrastructure.config.RabbitMQConfig.EXCHANGE;
+import static dev.vieira.ms_finance_api.infrastructure.config.RabbitMQConfig.ROUTING_KEY_NOTIFICATION_RESPONSE;
 
 @Component
 @RequiredArgsConstructor
@@ -29,6 +34,7 @@ public class FinanceRepositoryGateway implements FinanceGateway {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final ReportRepository reportRepository;
+    private final RabbitTemplate rabbitTemplate;
 
     @Override
     public User saveUser(User user) {
@@ -81,6 +87,7 @@ public class FinanceRepositoryGateway implements FinanceGateway {
                 .messageUser(expense.getMessageUser())
                 .created_at(expense.getCreated_at())
                 .installment(expense.getInstallment())
+                .category(expense.getCategory())
                 .user(userRef)
                 .build();
 
@@ -94,7 +101,7 @@ public class FinanceRepositoryGateway implements FinanceGateway {
     }
 
     @Override
-    public List<Expense> findAllReportsByUserId(UUID userId) {
+    public List<Expense> findAllExpenseByUserId(UUID userId) {
         return expenseRepository.findAllByUserId(userId)
                 .stream()
                 .map(expenseEntity -> new Expense(
@@ -105,7 +112,8 @@ public class FinanceRepositoryGateway implements FinanceGateway {
                         expenseEntity.getDescription(),
                         expenseEntity.getInstallment(),
                         expenseEntity.getDateExpense(),
-                        expenseEntity.getCreated_at()
+                        expenseEntity.getCreated_at(),
+                        expenseEntity.getCategory()
                 ))
                 .toList();
     }
@@ -126,7 +134,6 @@ public class FinanceRepositoryGateway implements FinanceGateway {
                 .itemCount(report.getItemCount())
                 .generatedAt(report.getGeneratedAt())
                 .updatedAt(report.getUpdatedAt())
-                .status(report.getStatus())
                 .isNew(report.isNew())
                 .build();
 
@@ -148,12 +155,20 @@ public class FinanceRepositoryGateway implements FinanceGateway {
                         entity.getUser().getId(),
                         entity.getCompetency(),
                         entity.getTotalExpenses(),
-                        entity.getStatus(),
                         entity.getTotalInstallments(),
                         entity.getGrandTotal(),
                         entity.getItemCount(),
                         entity.getGeneratedAt(),
                         entity.getUpdatedAt()
                 ));
+    }
+
+    @Override
+    public void sendMessage(NotificationResponseDto message) {
+        rabbitTemplate.convertAndSend(
+                EXCHANGE,
+                ROUTING_KEY_NOTIFICATION_RESPONSE,
+                message
+        );
     }
 }

@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 public record ParsedExpenseDto(
         String nome,
+        String category,
         BigDecimal valor,
         int parcelas) {
     

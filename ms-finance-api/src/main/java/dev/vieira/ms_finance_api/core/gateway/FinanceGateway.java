@@ -1,5 +1,6 @@
 package dev.vieira.ms_finance_api.core.gateway;
 
+import dev.vieira.ms_finance_api.core.dto.Report.NotificationResponseDto;
 import dev.vieira.ms_finance_api.core.entities.Category;
 import dev.vieira.ms_finance_api.core.entities.Expense;
 import dev.vieira.ms_finance_api.core.entities.Report;
@@ -19,9 +20,12 @@ public interface FinanceGateway {
 
     Expense saveExpense(Expense expense);
     Optional<Expense> findExpenseById(UUID expenseId);
-    List<Expense> findAllReportsByUserId(UUID userId);
+    List<Expense> findAllExpenseByUserId(UUID userId);
 
     Report saveReport(Report report);
     Report findReportByUserId(UUID userId);
     Optional<Report> findReportByUserAndCompetency(UUID userId, java.time.LocalDate competency);
+
+    void sendMessage(NotificationResponseDto message);
+
 }

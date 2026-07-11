@@ -12,7 +12,6 @@ public class Report {
     private final UUID id;
     private final UUID userId;
     private LocalDate competency;
-    private ReportStatus status;
     private BigDecimal totalExpenses;
     private BigDecimal totalInstallments;
 
@@ -29,7 +28,6 @@ public class Report {
     public Report(UUID id, UUID userId, LocalDate competency, BigDecimal totalExpenses, BigDecimal totalInstallments, BigDecimal grandTotal, int itemCount) {
         this.id = id != null ? id : UUID.randomUUID();
         this.isNew = id == null;
-        this.status = ReportStatus.OPEN;
         this.userId = userId;
         this.competency = competency;
         this.totalExpenses = totalExpenses;
@@ -41,13 +39,12 @@ public class Report {
 
     }
 
-    public Report(UUID id, UUID userId, LocalDate competency, BigDecimal totalExpenses, ReportStatus status, BigDecimal totalInstallments, BigDecimal grandTotal, int itemCount, LocalDateTime updatedAt, LocalDateTime generatedAt) {
+    public Report(UUID id, UUID userId, LocalDate competency, BigDecimal totalExpenses, BigDecimal totalInstallments, BigDecimal grandTotal, int itemCount, LocalDateTime updatedAt, LocalDateTime generatedAt) {
         this.id = id;
         this.isNew = false;
         this.userId = userId;
         this.competency = competency;
         this.totalExpenses = totalExpenses;
-        this.status = status;
         this.totalInstallments = totalInstallments;
         this.grandTotal = grandTotal;
         this.itemCount = itemCount;
@@ -71,10 +68,6 @@ public class Report {
         return competency;
     }
 
-    public ReportStatus getStatus() {
-        return status;
-    }
-
     public BigDecimal getTotalExpenses() {
         return totalExpenses;
     }
@@ -94,4 +87,5 @@ public class Report {
     public BigDecimal getTotalInstallments() {
         return totalInstallments;
     }
+
 }

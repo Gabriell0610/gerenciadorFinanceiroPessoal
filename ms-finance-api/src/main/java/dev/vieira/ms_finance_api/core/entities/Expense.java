@@ -14,8 +14,10 @@ public class Expense {
     private String description;
     private LocalDateTime created_at;
     private Integer installment;
+    private String category;
 
-    public Expense(UUID userId, BigDecimal amount, String messageUser, String description, Integer installment) {
+    public Expense(UUID userId, BigDecimal amount, String messageUser,
+                   String description, Integer installment, String category) {
         this.id = UUID.randomUUID(); // Sistema gera o ID único agora
         this.userId = userId;
         this.amount = amount;
@@ -24,9 +26,11 @@ public class Expense {
         this.created_at = LocalDateTime.now();
         this.dateExpense = LocalDateTime.now();
         this.installment = installment;
+        this.category = category;
     }
 
-    public Expense(UUID id, UUID userId, BigDecimal amount, String messageUser, String description, Integer installment,LocalDateTime dateExpense, LocalDateTime created_at ) {
+    public Expense(UUID id, UUID userId, BigDecimal amount, String messageUser, String description,
+                   Integer installment,LocalDateTime dateExpense, LocalDateTime created_at, String category ) {
         this.id = id; // Mantém o ID que veio do banco
         this.userId = userId;
         this.amount = amount;
@@ -34,7 +38,8 @@ public class Expense {
         this.description = description;
         this.installment = installment;
         this.dateExpense = dateExpense;
-        this.created_at  =  created_at;
+        this.created_at  = created_at;
+        this.category = category;
     }
 
     public UUID getId() {
@@ -67,6 +72,10 @@ public class Expense {
 
     public Integer getInstallment() {
         return installment;
+    }
+
+    public String getCategory() {
+        return category;
     }
 
     @Override

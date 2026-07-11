@@ -20,6 +20,10 @@ public class RabbitMQConfig {
     public static final String QUEUE_REPORT = "report.queue";
     public static final String ROUTING_KEY_REPORT = "report";
 
+
+    public static final String QUEUE_NOTIFICATION_RESPONSE = "notification.response.queue";
+
+
     // 1. Declara a Exchange (Decide para qual fila a mensagem vai ser enviada)
     @Bean
     public DirectExchange exchange() {
