@@ -20,7 +20,8 @@ public class RabbitMQConfig {
     public static final String QUEUE_REPORT = "report.queue";
     public static final String ROUTING_KEY_REPORT = "report";
 
-
+    public static final String EXCHANGE_NOTIFICATION = "notification.exchange";
+    public static final String ROUTING_KEY_NOTIFICATION_RESPONSE = "notification.response";
     public static final String QUEUE_NOTIFICATION_RESPONSE = "notification.response.queue";
 
 
@@ -52,9 +53,28 @@ public class RabbitMQConfig {
         return BindingBuilder.bind(reportQueue).to(exchange).with(ROUTING_KEY_REPORT);
     }
 
+    @Bean
+    public DirectExchange notificationExchange() {
+        return new DirectExchange(EXCHANGE_NOTIFICATION);
+    }
+
+    @Bean
+    public Queue notificationResponseQueue() {
+        return new Queue(QUEUE_NOTIFICATION_RESPONSE, true);
+    }
+
+    @Bean
+    public Binding notificationResponseBinding(Queue notificationResponseQueue) {
+        return BindingBuilder
+                .bind(notificationResponseQueue)
+                .to(new DirectExchange(EXCHANGE_NOTIFICATION))
+                .with(ROUTING_KEY_NOTIFICATION_RESPONSE);
+    }
+
     // 4. CRUCIAL: Transforma os seus DTOs/Records automaticamente em JSON ao enviar para a fila
     @Bean
     public JacksonJsonMessageConverter messageConverter() {
         return new JacksonJsonMessageConverter();
     }
+
 }

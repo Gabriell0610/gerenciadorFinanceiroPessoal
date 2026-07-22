@@ -33,8 +33,22 @@ public class BeanConfiguration {
     }
 
     @Bean
-    public ProcessReportUseCase processReportUseCase(FindUserByChatIdUseCase findUserByChatIdUseCase, FindAllExpenseByUserIdUseCase findAllExpenseByUserIdUseCase,  SaveReportUseCase saveReportUseCase, FindReportByUserAndCompetencyUseCase findReportByUserAndCompetencyUseCase,  SendNotificationUseCase sendNotificationUseCase) {
-        return new ProcessReportImpl(findUserByChatIdUseCase, findAllExpenseByUserIdUseCase, saveReportUseCase, findReportByUserAndCompetencyUseCase,sendNotificationUseCase);
+    public ProcessReportUseCase processReportUseCase(FindUserByChatIdUseCase findUserByChatIdUseCase,
+                                                     FindAllExpenseByUserIdUseCase findAllExpenseByUserIdUseCase,
+                                                     SaveReportUseCase saveReportUseCase,
+                                                     FindReportByUserAndCompetencyUseCase findReportByUserAndCompetencyUseCase,
+                                                     SendNotificationUseCase sendNotificationUseCase,
+                                                     ReportArchiveUseCase reportArchiveUseCase,
+                                                     FinanceGateway financeGateway) {
+        return new ProcessReportImpl(findUserByChatIdUseCase,
+                findAllExpenseByUserIdUseCase,
+                saveReportUseCase,
+                findReportByUserAndCompetencyUseCase,sendNotificationUseCase, reportArchiveUseCase, financeGateway);
+    }
+
+    @Bean
+    public ReportArchiveUseCase reportArchiveUseCase() {
+        return new ReportArchiveImpl();
     }
 
     @Bean

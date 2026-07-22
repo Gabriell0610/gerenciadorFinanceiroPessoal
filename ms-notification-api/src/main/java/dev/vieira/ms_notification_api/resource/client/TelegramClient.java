@@ -2,6 +2,8 @@ package dev.vieira.ms_notification_api.resource.client;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;

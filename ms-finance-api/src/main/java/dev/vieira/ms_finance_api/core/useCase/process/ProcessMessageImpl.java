@@ -11,6 +11,7 @@ import dev.vieira.ms_finance_api.core.useCase.report.ProcessReportUseCase;
 import dev.vieira.ms_finance_api.core.useCase.user.FindUserByChatIdUseCase;
 import dev.vieira.ms_finance_api.core.useCase.user.SaveUserUseCase;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
 

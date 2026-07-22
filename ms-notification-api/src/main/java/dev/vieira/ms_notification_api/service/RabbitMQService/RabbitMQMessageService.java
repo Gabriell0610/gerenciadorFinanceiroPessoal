@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import static dev.vieira.ms_notification_api.config.RabbitMQConfig.EXCHANGE;
 
 @Service
-@Profile("dev")
+@Profile("local")
 @RequiredArgsConstructor
 public class RabbitMQMessageService implements MessageService {
 

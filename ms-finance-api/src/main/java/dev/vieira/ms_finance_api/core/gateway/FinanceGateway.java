@@ -28,4 +28,5 @@ public interface FinanceGateway {
 
     void sendMessage(NotificationResponseDto message);
 
+    //void sendReportFile(byte[] csv, Long chatId);
 }

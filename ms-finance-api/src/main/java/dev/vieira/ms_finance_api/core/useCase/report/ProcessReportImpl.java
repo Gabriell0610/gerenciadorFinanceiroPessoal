@@ -4,10 +4,15 @@ import dev.vieira.ms_finance_api.core.dto.Report.NotificationResponseDto;
 import dev.vieira.ms_finance_api.core.dto.TelegramDto.TelegramUpdateDto;
 import dev.vieira.ms_finance_api.core.entities.Expense;
 import dev.vieira.ms_finance_api.core.entities.Report;
+import dev.vieira.ms_finance_api.core.gateway.FinanceGateway;
 import dev.vieira.ms_finance_api.core.useCase.expense.FindAllExpenseByUserIdUseCase;
 import dev.vieira.ms_finance_api.core.useCase.user.FindUserByChatIdUseCase;
 
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.ZoneId;
@@ -22,17 +27,23 @@ public class ProcessReportImpl implements  ProcessReportUseCase{
     private final FindReportByUserAndCompetencyUseCase findReportByUserAndCompetencyUseCase;
     private final SaveReportUseCase saveReportUseCase;
     private final SendNotificationUseCase sendNotificationUseCase;
+    private final ReportArchiveUseCase reportArchiveUseCase;
+    private final FinanceGateway financeGateway;
 
     public ProcessReportImpl(FindUserByChatIdUseCase findUserByChatIdUseCase,
                              FindAllExpenseByUserIdUseCase findAllReportsByUserIdUseCase,
                              SaveReportUseCase saveReportUseCase,
                              FindReportByUserAndCompetencyUseCase findReportByUserAndCompetencyUseCase,
-                             SendNotificationUseCase sendNotificationUseCase) {
+                             SendNotificationUseCase sendNotificationUseCase,
+                             ReportArchiveUseCase reportArchiveUseCase,
+                             FinanceGateway financeGateway) {
         this.findUserByChatIdUseCase = findUserByChatIdUseCase;
         this.findAllExpenseByUserIdUseCase = findAllReportsByUserIdUseCase;
         this.saveReportUseCase = saveReportUseCase;
         this.findReportByUserAndCompetencyUseCase = findReportByUserAndCompetencyUseCase;
         this.sendNotificationUseCase = sendNotificationUseCase;
+        this.reportArchiveUseCase = reportArchiveUseCase;
+        this.financeGateway = financeGateway;
     }
 
     @Override
@@ -77,7 +88,15 @@ public class ProcessReportImpl implements  ProcessReportUseCase{
 
         sendNotificationUseCase.execute(notificationResponseDto);
 
+//        //byte[] csv = reportArchiveUseCase.process(report, monthlyExpenses);
+//
+//        //financeGateway.sendReportFile(csv, payload.message().chat().id());
+//
+//        Files.write(Path.of("relatorio.csv"), csv);
+//        System.out.println("CSV gerado em: " + Path.of("relatorio.csv").toAbsolutePath());
+//        System.out.println(new String(csv, StandardCharsets.UTF_8));
     }
+
     private List<Expense> filterMonthlyExpenses(List<Expense> expenses, LocalDate competency) {
         return expenses.stream()
                 .filter(expense -> {

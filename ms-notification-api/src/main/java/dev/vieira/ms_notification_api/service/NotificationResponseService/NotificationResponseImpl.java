@@ -13,10 +13,10 @@ public class NotificationResponseImpl implements NotificationResponseUseCase {
 
     @Override
     public void execute(NotificationResponseDto message) {
-       try {
-           telegramClient.sendMessage(message.chaId(), message.message());
-       } catch (Exception e) {
-           System.out.println("[Infra - Telegram] Erro ao enviar mensagem para o Telegram: " + e.getMessage());
-       }
+        try {
+            telegramClient.sendMessage(message.chaId(), message.message());
+        } catch (Exception e) {
+            System.out.println("[Infra - Telegram] Erro ao enviar mensagem para o Telegram: " + e.getMessage());
+        }
     }
 }

@@ -171,4 +171,11 @@ public class FinanceRepositoryGateway implements FinanceGateway {
                 message
         );
     }
+
+//    @Override
+//    public void sendReportFile(byte[] csv, Long chatId) {
+//        notificationClient.sendFile(String.valueOf(chatId), csv);
+//    }
+
+
 }

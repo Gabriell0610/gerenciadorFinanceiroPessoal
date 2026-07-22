@@ -19,6 +19,10 @@ public class RabbitMQConfig {
     public static final String QUEUE_NOTIFICATION_RESPONSE = "notification.response.queue";
     public static final String ROUTING_KEY_NOTIFICATION_RESPONSE = "notification.response";
 
+    public static final String EXCHANGE_TELEGRAM = "telegram.exchange";
+    public static final String ROUTING_KEY_REPORT = "report";
+    public static final String ROUTING_KEY_EXPENSE = "expense";
+
     @Bean
     public DirectExchange exchange() {
         return new DirectExchange(EXCHANGE);
@@ -34,6 +38,37 @@ public class RabbitMQConfig {
     @Bean
     public Binding notificationBinding(Queue reportQueue, DirectExchange exchange) {
         return BindingBuilder.bind(reportQueue).to(exchange).with(ROUTING_KEY_NOTIFICATION_RESPONSE);
+    }
+
+    @Bean
+    public DirectExchange telegramExchange() {
+        return new DirectExchange(EXCHANGE_TELEGRAM);
+    }
+
+    @Bean
+    public Queue expenseQueue() {
+        return new Queue(QUEUE_EXPENSE, true);
+    }
+
+    @Bean
+    public Queue reportQueue() {
+        return new Queue(QUEUE_REPORT, true);
+    }
+
+    @Bean
+    public Binding expenseBinding(Queue expenseQueue) {
+        return BindingBuilder
+                .bind(expenseQueue)
+                .to(new DirectExchange(EXCHANGE_TELEGRAM))
+                .with(ROUTING_KEY_EXPENSE);
+    }
+
+    @Bean
+    public Binding reportBinding(Queue reportQueue) {
+        return BindingBuilder
+                .bind(reportQueue)
+                .to(new DirectExchange(EXCHANGE_TELEGRAM))
+                .with(ROUTING_KEY_REPORT);
     }
 
 

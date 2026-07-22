@@ -1,0 +1,38 @@
+services:
+  postgres-db:
+    image: postgres:15-alpine
+    container_name: ms-finance-db
+    environment:
+      POSTGRES_USER: user_finance_dev
+      POSTGRES_PASSWORD: password_finance_dev
+      POSTGRES_DB: db_finance_dev
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - finance-network
+
+  rabbitmq:
+    image: rabbitmq:4-management
+    container_name: ms-finance-rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: user_finance_dev
+      RABBITMQ_DEFAULT_PASS: password_finance_dev
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+      - rabbitmq_log:/var/log/rabbitmq
+    networks:
+      - finance-network
+
+volumes:
+  postgres_data:
+  rabbitmq_data:
+  rabbitmq_log:
+
+networks:
+  finance-network:
+    driver: bridge

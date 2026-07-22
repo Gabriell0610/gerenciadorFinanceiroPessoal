@@ -85,7 +85,6 @@ public class ProcessMessageImplTest {
         var payload = createPayloadTelegram("32");
         var process = ProcessConsumer.EXPENSE;
 
-
         //Act
         processMessageImpl.execute(payload, process);
 
