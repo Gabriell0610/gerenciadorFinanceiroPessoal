@@ -6,20 +6,27 @@ import dev.vieira.ms_finance_api.core.gateway.FinanceGateway;
 import dev.vieira.ms_finance_api.core.useCase.expense.*;
 import dev.vieira.ms_finance_api.core.useCase.process.ProcessMessageImpl;
 import dev.vieira.ms_finance_api.core.useCase.process.ProcessMessageUseCase;
-import dev.vieira.ms_finance_api.core.useCase.report.*;
+import dev.vieira.ms_finance_api.core.useCase.report.contract.*;
+import dev.vieira.ms_finance_api.core.useCase.report.impl.*;
 import dev.vieira.ms_finance_api.core.useCase.user.FindUserByChatIdImpl;
 import dev.vieira.ms_finance_api.core.useCase.user.FindUserByChatIdUseCase;
 import dev.vieira.ms_finance_api.core.useCase.user.SaveUserImpl;
 import dev.vieira.ms_finance_api.core.useCase.user.SaveUserUseCase;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import tools.jackson.databind.ObjectMapper;
 
 @Configuration
 public class BeanConfiguration {
 
     @Bean
-    public ProcessMessageUseCase processMessageTelegramUseCase(SaveUserUseCase saveUserUseCase, SaveExpenseUseCase saveExpenseUseCase, ProcessReportUseCase processReportUseCase, FindUserByChatIdUseCase findUserByChatIdUseCase, ExpenseExporterGateway expenseExporterGateway) {
-        return new ProcessMessageImpl(saveUserUseCase, saveExpenseUseCase, processReportUseCase, findUserByChatIdUseCase, expenseExporterGateway);
+    public ProcessMessageUseCase processMessageTelegramUseCase(SaveUserUseCase saveUserUseCase, SaveExpenseUseCase saveExpenseUseCase,
+                                                               ProcessReportUseCase processReportUseCase,
+                                                               FindUserByChatIdUseCase findUserByChatIdUseCase,
+                                                               ExpenseExporterGateway expenseExporterGateway,
+                                                               FinanceGateway financeGateway,
+                                                               ObjectMapper objectMapper) {
+        return new ProcessMessageImpl(saveUserUseCase, saveExpenseUseCase, processReportUseCase, findUserByChatIdUseCase, expenseExporterGateway,financeGateway, objectMapper );
     }
 
     @Bean

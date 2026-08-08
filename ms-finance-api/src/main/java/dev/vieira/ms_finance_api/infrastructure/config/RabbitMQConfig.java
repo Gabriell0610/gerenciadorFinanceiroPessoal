@@ -12,16 +12,18 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMQConfig {
 
+    //FINANCE-API CONSOME ESSAS DUAS FILAS
+    public static final String EXCHANGE_TELEGRAM = "telegram.exchange";
     public static final String QUEUE_EXPENSE = "expense.queue";
     public static final String QUEUE_REPORT = "report.queue";
+    public static final String ROUTING_KEY_REPORT = "report";
+    public static final String ROUTING_KEY_EXPENSE = "expense";
 
+    //FINANCE-API PRODUZ ESSA FILA
     public static final String EXCHANGE = "notification.exchange";
     public static final String QUEUE_NOTIFICATION_RESPONSE = "notification.response.queue";
     public static final String ROUTING_KEY_NOTIFICATION_RESPONSE = "notification.response";
 
-    public static final String EXCHANGE_TELEGRAM = "telegram.exchange";
-    public static final String ROUTING_KEY_REPORT = "report";
-    public static final String ROUTING_KEY_EXPENSE = "expense";
 
     @Bean
     public DirectExchange exchange() {
@@ -37,7 +39,7 @@ public class RabbitMQConfig {
     // 3. Faz o vínculo (Binding) entre a Fila e a Exchange usando a Routing Key
     @Bean
     public Binding notificationBinding(Queue reportQueue, DirectExchange exchange) {
-        return BindingBuilder.bind(reportQueue).to(exchange).with(ROUTING_KEY_NOTIFICATION_RESPONSE);
+        return BindingBuilder.bind(notificationQueue()).to(exchange).with(ROUTING_KEY_NOTIFICATION_RESPONSE);
     }
 
     @Bean

@@ -1,11 +1,13 @@
 package dev.vieira.ms_finance_api.core.dto.Expense;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 public record ParsedExpenseDto(
-        String nome,
+        String description,
+        BigDecimal amount,
         String category,
-        BigDecimal valor,
-        int parcelas) {
+        int installments,
+        LocalDate paymentDate) {
     
 }

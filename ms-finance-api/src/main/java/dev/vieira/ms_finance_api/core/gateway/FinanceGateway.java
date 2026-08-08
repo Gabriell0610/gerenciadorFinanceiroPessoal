@@ -5,6 +5,7 @@ import dev.vieira.ms_finance_api.core.entities.Category;
 import dev.vieira.ms_finance_api.core.entities.Expense;
 import dev.vieira.ms_finance_api.core.entities.Report;
 import dev.vieira.ms_finance_api.core.entities.User;
+import dev.vieira.ms_finance_api.infrastructure.dto.GeminiDto.GeminiResponseDto;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,6 +28,8 @@ public interface FinanceGateway {
     Optional<Report> findReportByUserAndCompetency(UUID userId, java.time.LocalDate competency);
 
     void sendMessage(NotificationResponseDto message);
+
+    GeminiResponseDto processMessageIA(String message);
 
     //void sendReportFile(byte[] csv, Long chatId);
 }

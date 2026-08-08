@@ -6,6 +6,7 @@ import lombok.*;
 import org.springframework.data.domain.Persistable;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -28,7 +29,7 @@ public class ExpenseEntity implements Persistable<UUID> {
     private BigDecimal amount;
 
     @Column(name = "date_expense", nullable = false)
-    private LocalDateTime dateExpense;
+    private LocalDate dateExpense;
 
     @Column(name = "description", nullable = false)
     private String description;

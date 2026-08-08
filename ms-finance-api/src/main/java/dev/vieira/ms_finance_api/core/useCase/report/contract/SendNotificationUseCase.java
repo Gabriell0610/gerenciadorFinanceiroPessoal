@@ -1,4 +1,4 @@
-package dev.vieira.ms_finance_api.core.useCase.report;
+package dev.vieira.ms_finance_api.core.useCase.report.contract;
 
 import dev.vieira.ms_finance_api.core.dto.Report.NotificationResponseDto;
 

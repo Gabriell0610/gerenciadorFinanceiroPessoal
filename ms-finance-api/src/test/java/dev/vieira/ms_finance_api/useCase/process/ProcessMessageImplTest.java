@@ -10,7 +10,7 @@ import dev.vieira.ms_finance_api.core.enums.ProcessConsumer;
 import dev.vieira.ms_finance_api.core.gateway.ExpenseExporterGateway;
 import dev.vieira.ms_finance_api.core.useCase.expense.SaveExpenseUseCase;
 import dev.vieira.ms_finance_api.core.useCase.process.ProcessMessageImpl;
-import dev.vieira.ms_finance_api.core.useCase.report.ProcessReportUseCase;
+import dev.vieira.ms_finance_api.core.useCase.report.contract.ProcessReportUseCase;
 import dev.vieira.ms_finance_api.core.useCase.user.FindUserByChatIdUseCase;
 import dev.vieira.ms_finance_api.core.useCase.user.SaveUserUseCase;
 import org.junit.jupiter.api.Test;

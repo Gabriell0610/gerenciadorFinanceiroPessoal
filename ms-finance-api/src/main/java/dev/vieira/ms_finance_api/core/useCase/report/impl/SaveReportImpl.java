@@ -1,7 +1,8 @@
-package dev.vieira.ms_finance_api.core.useCase.report;
+package dev.vieira.ms_finance_api.core.useCase.report.impl;
 
 import dev.vieira.ms_finance_api.core.entities.Report;
 import dev.vieira.ms_finance_api.core.gateway.FinanceGateway;
+import dev.vieira.ms_finance_api.core.useCase.report.contract.SaveReportUseCase;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

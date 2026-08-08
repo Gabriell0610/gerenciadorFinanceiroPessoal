@@ -1,6 +1,7 @@
 package dev.vieira.ms_finance_api.core.entities;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -9,7 +10,7 @@ public class Expense {
     private final UUID id;
     private UUID userId;
     private BigDecimal amount;
-    private LocalDateTime dateExpense;
+    private LocalDate dateExpense;
     private String messageUser;
     private String description;
     private LocalDateTime created_at;
@@ -17,20 +18,20 @@ public class Expense {
     private String category;
 
     public Expense(UUID userId, BigDecimal amount, String messageUser,
-                   String description, Integer installment, String category) {
+                   String description, Integer installment, String category, LocalDate paymentDate) {
         this.id = UUID.randomUUID(); // Sistema gera o ID único agora
         this.userId = userId;
         this.amount = amount;
         this.messageUser = messageUser;
         this.description = description;
         this.created_at = LocalDateTime.now();
-        this.dateExpense = LocalDateTime.now();
+        this.dateExpense = paymentDate;
         this.installment = installment;
         this.category = category;
     }
 
     public Expense(UUID id, UUID userId, BigDecimal amount, String messageUser, String description,
-                   Integer installment,LocalDateTime dateExpense, LocalDateTime created_at, String category ) {
+                   Integer installment,LocalDate dateExpense, LocalDateTime created_at, String category ) {
         this.id = id; // Mantém o ID que veio do banco
         this.userId = userId;
         this.amount = amount;
@@ -54,7 +55,7 @@ public class Expense {
         return amount;
     }
 
-    public LocalDateTime getDateExpense() {
+    public LocalDate getDateExpense() {
         return dateExpense;
     }
 

@@ -1,4 +1,4 @@
-package dev.vieira.ms_finance_api.core.useCase.report;
+package dev.vieira.ms_finance_api.core.useCase.report.contract;
 
 import dev.vieira.ms_finance_api.core.entities.Expense;
 import dev.vieira.ms_finance_api.core.entities.Report;

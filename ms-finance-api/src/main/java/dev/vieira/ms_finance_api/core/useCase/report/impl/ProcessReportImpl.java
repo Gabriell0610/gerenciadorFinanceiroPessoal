@@ -1,4 +1,4 @@
-package dev.vieira.ms_finance_api.core.useCase.report;
+package dev.vieira.ms_finance_api.core.useCase.report.impl;
 
 import dev.vieira.ms_finance_api.core.dto.Report.NotificationResponseDto;
 import dev.vieira.ms_finance_api.core.dto.TelegramDto.TelegramUpdateDto;
@@ -6,13 +6,10 @@ import dev.vieira.ms_finance_api.core.entities.Expense;
 import dev.vieira.ms_finance_api.core.entities.Report;
 import dev.vieira.ms_finance_api.core.gateway.FinanceGateway;
 import dev.vieira.ms_finance_api.core.useCase.expense.FindAllExpenseByUserIdUseCase;
+import dev.vieira.ms_finance_api.core.useCase.report.contract.*;
 import dev.vieira.ms_finance_api.core.useCase.user.FindUserByChatIdUseCase;
 
-import java.io.IOException;
 import java.math.BigDecimal;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.ZoneId;
@@ -20,7 +17,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 
-public class ProcessReportImpl implements  ProcessReportUseCase{
+public class ProcessReportImpl implements ProcessReportUseCase {
 
     private final FindUserByChatIdUseCase findUserByChatIdUseCase;
     private final FindAllExpenseByUserIdUseCase findAllExpenseByUserIdUseCase;

@@ -12,14 +12,14 @@ import tools.jackson.databind.ObjectMapper;
 @Configuration
 public class RabbitMQConfig {
 
+    //NOTIFICATION-API PRODUZ ESSA FILA
     public static final String EXCHANGE = "telegram.exchange";
-
     public static final String QUEUE_EXPENSE = "expense.queue";
     public static final String ROUTING_KEY_EXPENSE = "expense";
-
     public static final String QUEUE_REPORT = "report.queue";
     public static final String ROUTING_KEY_REPORT = "report";
 
+    //NOTIFICATION-API CONSOME ESSE FILA
     public static final String EXCHANGE_NOTIFICATION = "notification.exchange";
     public static final String ROUTING_KEY_NOTIFICATION_RESPONSE = "notification.response";
     public static final String QUEUE_NOTIFICATION_RESPONSE = "notification.response.queue";

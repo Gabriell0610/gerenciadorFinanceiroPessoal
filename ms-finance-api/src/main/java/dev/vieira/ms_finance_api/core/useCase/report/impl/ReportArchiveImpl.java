@@ -1,12 +1,13 @@
-package dev.vieira.ms_finance_api.core.useCase.report;
+package dev.vieira.ms_finance_api.core.useCase.report.impl;
 
 import dev.vieira.ms_finance_api.core.entities.Expense;
 import dev.vieira.ms_finance_api.core.entities.Report;
+import dev.vieira.ms_finance_api.core.useCase.report.contract.ReportArchiveUseCase;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-public class ReportArchiveImpl implements ReportArchiveUseCase{
+public class ReportArchiveImpl implements ReportArchiveUseCase {
 
 
     @Override

@@ -37,7 +37,7 @@ public class NotionExpenseExporterGateway implements ExpenseExporterGateway {
         var numberProp = new NumberProp(expense.getAmount().doubleValue());
 
         // Mapeia a coluna "Data" (Tipo Date no Notion em formato ISO)
-        String isoDate = expense.getDateExpense().format(DateTimeFormatter.ISO_DATE_TIME);
+        String isoDate = expense.getDateExpense().format(DateTimeFormatter.ISO_DATE);
         var dateProp = new DateProp(new DateDetails(isoDate));
 
         var multiSelectProp = new MultiSelectProp(
@@ -54,7 +54,7 @@ public class NotionExpenseExporterGateway implements ExpenseExporterGateway {
 
         var request = new NotionPageRequest(parent, properties);
 
-        // 2. Dispara via OpenFeign de forma extremamente limpa
+        // 2. Dispara via OpenFeign
         try {
             String authorizationHeader = "Bearer " + token;
             String notionVersion = "2022-06-28";

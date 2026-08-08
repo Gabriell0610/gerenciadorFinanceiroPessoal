@@ -6,6 +6,8 @@ import dev.vieira.ms_finance_api.core.entities.Expense;
 import dev.vieira.ms_finance_api.core.entities.User;
 import dev.vieira.ms_finance_api.core.gateway.FinanceGateway;
 
+import java.time.LocalDateTime;
+
 public class SaveExpenseImpl implements SaveExpenseUseCase {
 
     private final FinanceGateway financeGateway;
@@ -16,13 +18,16 @@ public class SaveExpenseImpl implements SaveExpenseUseCase {
 
     @Override
     public Expense execute(User user, TelegramUpdateDto payload, ParsedExpenseDto parsed) {
-        //regra de negocio antes de salvar
+
         var installment = 1;
-        if(parsed.parcelas() > 1) {
-            installment = parsed.parcelas();
+        if(parsed.installments() > 1) {
+            installment = parsed.installments();
         }
-        var expenseEntity = new Expense(user.getId(), parsed.valor(),
-                payload.message().text(), parsed.nome(), installment, parsed.category());
+
+
+        var expenseEntity = new Expense(user.getId(), parsed.amount(),
+                payload.message().text(), parsed.description(), installment, parsed.category(), parsed.paymentDate());
         return financeGateway.saveExpense(expenseEntity);
+
     }
 }
