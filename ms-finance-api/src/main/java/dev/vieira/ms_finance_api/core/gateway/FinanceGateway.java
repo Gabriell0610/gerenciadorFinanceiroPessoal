@@ -15,21 +15,14 @@ public interface FinanceGateway {
 
     User saveUser(User user);
     Optional<User> findUserById(UUID userId);
-    Optional<User> findUserByChatId(Long chatId); // bot vai precisar desse metodo
-
-    Optional<Category> findCategoryById(UUID categoryId);
+    Optional<User> findUserByChatId(Long chatId);
 
     Expense saveExpense(Expense expense);
     Optional<Expense> findExpenseById(UUID expenseId);
     List<Expense> findAllExpenseByUserId(UUID userId);
 
     Report saveReport(Report report);
-    Report findReportByUserId(UUID userId);
     Optional<Report> findReportByUserAndCompetency(UUID userId, java.time.LocalDate competency);
 
     void sendMessage(NotificationResponseDto message);
-
-    GeminiResponseDto processMessageIA(String message);
-
-    //void sendReportFile(byte[] csv, Long chatId);
 }

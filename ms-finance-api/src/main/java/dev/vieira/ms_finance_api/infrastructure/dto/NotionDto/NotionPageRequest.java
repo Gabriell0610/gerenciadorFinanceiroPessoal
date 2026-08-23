@@ -9,7 +9,7 @@ public record NotionPageRequest(
         Parent parent,
         Map<String, Object> properties
 ) {
-    public record Parent(@JsonProperty("database_id") String databaseId) {}
+    public record Parent(String type, @JsonProperty("data_source_id") String dataSourceId) {}
 
     // Auxiliares para montar o JSON
     public record TextContent(String content) {}

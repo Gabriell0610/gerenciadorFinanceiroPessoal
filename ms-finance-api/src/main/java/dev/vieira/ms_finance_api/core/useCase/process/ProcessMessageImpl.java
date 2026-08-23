@@ -7,6 +7,7 @@ import dev.vieira.ms_finance_api.core.entities.User;
 import dev.vieira.ms_finance_api.core.enums.ProcessConsumer;
 import dev.vieira.ms_finance_api.core.gateway.ExpenseExporterGateway;
 import dev.vieira.ms_finance_api.core.gateway.FinanceGateway;
+import dev.vieira.ms_finance_api.core.gateway.PromptFinanceGatewayImpl;
 import dev.vieira.ms_finance_api.core.useCase.expense.SaveExpenseUseCase;
 import dev.vieira.ms_finance_api.core.useCase.report.contract.ProcessReportUseCase;
 import dev.vieira.ms_finance_api.core.useCase.user.FindUserByChatIdUseCase;
@@ -24,23 +25,23 @@ public class ProcessMessageImpl implements ProcessMessageUseCase {
     private final SaveExpenseUseCase saveExpenseUseCase;
     private final ProcessReportUseCase processReportUseCase;
     private final ExpenseExporterGateway expenseExporterGateway;
-    private final FinanceGateway financeGateway;
     private final ObjectMapper objectMapper;
+    private final PromptFinanceGatewayImpl promptFinanceGateway;
 
     public ProcessMessageImpl(SaveUserUseCase saveUserUseCase,
                               SaveExpenseUseCase saveExpenseUseCase,
                               ProcessReportUseCase processReportUseCase,
                               FindUserByChatIdUseCase findUserByChatIdUseCase,
                               ExpenseExporterGateway expenseExporterGateway,
-                              FinanceGateway financeGateway,
-                              ObjectMapper objectMapper) {
+                              ObjectMapper objectMapper,
+                              PromptFinanceGatewayImpl promptFinanceGateway) {
         this.saveUserUseCase = saveUserUseCase;
         this.saveExpenseUseCase = saveExpenseUseCase;
         this.processReportUseCase = processReportUseCase;
         this.findUserByChatIdUseCase = findUserByChatIdUseCase;
         this.expenseExporterGateway = expenseExporterGateway;
-        this.financeGateway = financeGateway;
         this.objectMapper = objectMapper;
+        this.promptFinanceGateway = promptFinanceGateway;
     }
 
 
@@ -54,7 +55,7 @@ public class ProcessMessageImpl implements ProcessMessageUseCase {
             return;
         }
 
-        GeminiResponseDto geminiResponse  = this.financeGateway.processMessageIA(payload.message().text());
+        GeminiResponseDto geminiResponse  = this.promptFinanceGateway.processMessage(payload.message().text());
 
         String json = geminiResponse.candidates()
                 .get(0)

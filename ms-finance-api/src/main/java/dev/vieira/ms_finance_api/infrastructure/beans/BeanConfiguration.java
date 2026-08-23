@@ -3,6 +3,7 @@ package dev.vieira.ms_finance_api.infrastructure.beans;
 
 import dev.vieira.ms_finance_api.core.gateway.ExpenseExporterGateway;
 import dev.vieira.ms_finance_api.core.gateway.FinanceGateway;
+import dev.vieira.ms_finance_api.core.gateway.PromptFinanceGatewayImpl;
 import dev.vieira.ms_finance_api.core.useCase.expense.*;
 import dev.vieira.ms_finance_api.core.useCase.process.ProcessMessageImpl;
 import dev.vieira.ms_finance_api.core.useCase.process.ProcessMessageUseCase;
@@ -24,9 +25,14 @@ public class BeanConfiguration {
                                                                ProcessReportUseCase processReportUseCase,
                                                                FindUserByChatIdUseCase findUserByChatIdUseCase,
                                                                ExpenseExporterGateway expenseExporterGateway,
-                                                               FinanceGateway financeGateway,
-                                                               ObjectMapper objectMapper) {
-        return new ProcessMessageImpl(saveUserUseCase, saveExpenseUseCase, processReportUseCase, findUserByChatIdUseCase, expenseExporterGateway,financeGateway, objectMapper );
+                                                               ObjectMapper objectMapper,
+                                                               PromptFinanceGatewayImpl promptFinanceGateway) {
+        return new ProcessMessageImpl(saveUserUseCase, saveExpenseUseCase,
+                processReportUseCase,
+                findUserByChatIdUseCase,
+                expenseExporterGateway,
+                objectMapper,
+                promptFinanceGateway);
     }
 
     @Bean

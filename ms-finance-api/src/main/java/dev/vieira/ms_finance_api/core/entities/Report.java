@@ -1,7 +1,5 @@
 package dev.vieira.ms_finance_api.core.entities;
 
-import dev.vieira.ms_finance_api.core.enums.ReportStatus;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;

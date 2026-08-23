@@ -23,12 +23,12 @@ public class NotionExpenseExporterGateway implements ExpenseExporterGateway {
     private String token;
 
     @Value("${notion.database.id}")
-    private String databaseId;
+    private String dataSourceId;
 
     @Override
     public void export(Expense expense) {
         // 1. Monta o corpo do payload respeitando o formato do Notion
-        var parent = new Parent(databaseId);
+        var parent = new Parent("data_source_id", dataSourceId);
 
         // Mapeia a coluna "Descrição" (Tipo Title no Notion)
         var titleProp = new TitleProp(List.of(new TextObj(new TextContent(expense.getDescription()))));
@@ -57,7 +57,7 @@ public class NotionExpenseExporterGateway implements ExpenseExporterGateway {
         // 2. Dispara via OpenFeign
         try {
             String authorizationHeader = "Bearer " + token;
-            String notionVersion = "2022-06-28";
+            String notionVersion = "2025-09-03";
 
             notionClient.createPage(authorizationHeader, notionVersion, request);
             System.out.println("[Notion] Gasto espelhado com sucesso!");

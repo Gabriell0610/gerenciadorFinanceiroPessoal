@@ -1,6 +1,5 @@
 package dev.vieira.ms_finance_api.infrastructure.persistence.report;
 
-import dev.vieira.ms_finance_api.core.enums.ReportStatus;
 import dev.vieira.ms_finance_api.infrastructure.persistence.user.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
