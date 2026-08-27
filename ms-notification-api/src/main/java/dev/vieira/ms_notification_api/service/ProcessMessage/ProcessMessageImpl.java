@@ -6,10 +6,13 @@ import dev.vieira.ms_notification_api.service.ReportService.ReportServiceImpl;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ProcessMessageImpl implements ProcessTelegramMessageService {
@@ -17,27 +20,28 @@ public class ProcessMessageImpl implements ProcessTelegramMessageService {
     private final Validator validator;
     private final ReportServiceImpl reportService;
     private final ExpenseServiceImpl expenseService;
+    private final Logger processMessageImpLogger;
 
     @Override
     public void process(TelegramUpdateDto message) {
-        System.out.println("Inicando processo: " + message);
+        processMessageImpLogger.info("Inicando processo: {}", message);
 
         Set<ConstraintViolation<TelegramUpdateDto>> violations = validator.validate(message);
 
         if (!violations.isEmpty()) {
 
             for (ConstraintViolation<TelegramUpdateDto> erro : violations) {
-                System.out.println("Erro encontrado: " + erro.getMessage());
+                processMessageImpLogger.error("Erro encontrado: {}", erro.getMessage());
             }
 
             return;
         }
 
         if(message.message().text().startsWith("/relatorio")) {
-            System.out.println("Mensagem é um relatorio, direcionando para o ReportService");
+            processMessageImpLogger.info("Mensagem é um relatorio, direcionando para o ReportService");
             reportService.execute(message);
         }else {
-            System.out.println("Mensagem é um expense, direcionando para o ExpenseService: " + message);
+            processMessageImpLogger.info("Mensagem é um expense, direcionando para o ExpenseService: {}", message);
             expenseService.execute(message);
         }
 
