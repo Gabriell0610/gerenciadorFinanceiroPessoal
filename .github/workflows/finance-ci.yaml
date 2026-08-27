@@ -28,7 +28,3 @@ jobs:
       - name: Compilar e Rodar Testes com Maven
         run: mvn clean test
         working-directory: ./ms-finance-api
-
-      - name: Gerar jar
-        run: mvn clean package -DskipTests
-        working-directory: ./ms-finance-api
