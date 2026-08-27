@@ -2,29 +2,58 @@ name: Finance API CI/CD
 
 on:
   push:
-    branches: [ "main", "develop" ]
+    branches: [ "main", "develop"]
     paths:
       - 'ms-finance-api/**'
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main"]
     paths:
       - 'ms-finance-api/**'
 
 jobs:
-  build-and-test:
+  build-test-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Baixar o código do repositório
+      # 1. Baixa o código do repositório na máquina virtual
+      - name: Checkout código
         uses: actions/checkout@v4
 
-      - name: Configurar o Java JDK 21
+      # 2. Instala o Java 21 na máquina virtual
+      - name: Configurar Java 21
         uses: actions/setup-java@v4
         with:
           java-version: '21'
           distribution: 'temurin'
           cache: maven
 
-      - name: Compilar e Rodar Testes com Maven
+      # 3. Roda os testes
+      - name: Rodar testes
         run: mvn clean test
         working-directory: ./ms-finance-api
+
+      # 4. Gera o jar (só roda se os testes passaram)
+      - name: Gerar jar
+        run: mvn package -DskipTests
+        working-directory: ./ms-finance-api
+
+      # 5. Copia o jar pro EC2 via scp (só roda em push na main, não em PR)
+      - name: Copiar jar pro EC2
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ec2-user
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: ms-finance-api/target/ms-finance-api-0.0.1-SNAPSHOT.jar
+          target: /home/ec2-user/
+
+      # 6. Conecta no EC2 e reinicia o serviço
+      - name: Reiniciar serviço no EC2
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ec2-user
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: sudo systemctl restart ms-finance-api
