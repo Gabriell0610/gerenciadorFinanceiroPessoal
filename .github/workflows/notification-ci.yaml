@@ -2,7 +2,7 @@ name: Notification API CI
 
 on:
   push:
-    branches: [ "main", "develop" ]
+    branches: [ "main", "develop"]
     paths:
       - 'ms-notification-api/**' # SÓ roda se houver mudanças nesta pasta
   pull_request:
