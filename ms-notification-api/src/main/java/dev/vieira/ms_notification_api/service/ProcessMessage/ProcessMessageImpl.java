@@ -20,28 +20,27 @@ public class ProcessMessageImpl implements ProcessTelegramMessageService {
     private final Validator validator;
     private final ReportServiceImpl reportService;
     private final ExpenseServiceImpl expenseService;
-    private final Logger processMessageImpLogger;
 
     @Override
     public void process(TelegramUpdateDto message) {
-        processMessageImpLogger.info("Inicando processo: {}", message);
+        log.info("Inicando processo: {}", message);
 
         Set<ConstraintViolation<TelegramUpdateDto>> violations = validator.validate(message);
 
         if (!violations.isEmpty()) {
 
             for (ConstraintViolation<TelegramUpdateDto> erro : violations) {
-                processMessageImpLogger.error("Erro encontrado: {}", erro.getMessage());
+                log.error("Erro encontrado: {}", erro.getMessage());
             }
 
             return;
         }
 
         if(message.message().text().startsWith("/relatorio")) {
-            processMessageImpLogger.info("Mensagem é um relatorio, direcionando para o ReportService");
+            log.info("Mensagem é um relatorio, direcionando para o ReportService");
             reportService.execute(message);
         }else {
-            processMessageImpLogger.info("Mensagem é um expense, direcionando para o ExpenseService: {}", message);
+            log.info("Mensagem é um expense, direcionando para o ExpenseService: {}", message);
             expenseService.execute(message);
         }
 
