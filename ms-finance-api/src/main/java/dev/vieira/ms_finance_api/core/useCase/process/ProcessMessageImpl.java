@@ -48,6 +48,7 @@ public class ProcessMessageImpl implements ProcessMessageUseCase {
     @Override
     public void execute(TelegramUpdateDto payload, ProcessConsumer process) {
         System.out.println("[Core] Processando lógica de negócio da mensagem...");
+        System.out.println("teste deploy"); // tirar, é a penas teste
 
         if(process.equals(ProcessConsumer.REPORT)) {
             System.out.println("Mensagem é um relatorio, direcionando para o ReportService");
