@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient(name = "geminiClient", url = "${gemini.api.url}")
 public interface GeminiClient {
 
-    @PostMapping("/v1beta/models/gemini-flash-latest:generateContent")
+    @PostMapping("/v1beta/models/gemini-3.1-flash-lite:generateContent")
     GeminiResponseDto generate(
             @RequestParam("key") String apiKey,
             @RequestBody GeminiRequestDto request
