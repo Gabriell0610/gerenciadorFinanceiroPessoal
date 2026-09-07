@@ -53,6 +53,7 @@ public class RabbitMQConfig {
         return BindingBuilder.bind(reportQueue).to(exchange).with(ROUTING_KEY_REPORT);
     }
 
+    //Consome essa fila
     @Bean
     public DirectExchange notificationExchange() {
         return new DirectExchange(EXCHANGE_NOTIFICATION);
