@@ -30,8 +30,28 @@ O objetivo não é criar a arquitetura mais simples possível, mas utilizar um p
 - Observabilidade
 
 #### Escolhas e Tradeoffs
-**Motivo de escolher comunicação assíncrona com fila entre o notification-api e o finance-pai**: Essa escolha surgiu por dois motivos principais, o primeiro é o desacoplamento que a fila traz de um serviço para o outro, fazendo a mensagem ser processada de forma assíncrona além de que todo o processo com o **rest** poderia ser demorado para entregar o status necessário para fechar a comunicação do webhook do telegram com o notification-api. O notification ele recebe a mensagem do telegram pelo webhook e validar/processa a mensagem e publica na fila. O fim desse processo retorna o 200 Ok para o telegram. 
 
+#### Comunicação assíncrona entre notification-api e finance-api
+
+A escolha pela comunicação assíncrona utilizando filas surgiu principalmente por dois motivos.
+- O primeiro é o desacoplamento entre os serviços. O notification-api não precisa aguardar todo o processamento realizado pelo finance-api para finalizar a requisição recebida pelo webhook.
+- Além disso, realizar todo o fluxo utilizando comunicação REST síncrona poderia aumentar o tempo necessário para responder ao webhook do Telegram.
+
+O fluxo funciona da seguinte forma:
+
+Telegram
+    ↓
+notification-api
+    ↓
+validação/processamento inicial
+    ↓
+publicação na fila
+    ↓
+HTTP 200 OK para o Telegram
+
+Após a mensagem ser publicada, o finance-api pode processá-la de forma assíncrona.
+
+Essa decisão adiciona complexidade ao projeto, já que passa a ser necessário lidar com conceitos como idempotência, retry, backoff e DLQ. Porém, como o projeto também funciona como laboratório de estudos, essa complexidade é proposital.
 
 # Arquitetura
 O sistema é divido em três serviços com responsabilidades diferentes
