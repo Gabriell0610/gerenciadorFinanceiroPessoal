@@ -39,7 +39,7 @@ A escolha pela comunicação assíncrona utilizando filas surgiu principalmente 
 
 O fluxo funciona da seguinte forma:
 
-Telegram -> notification-api -> validação/processamento inicial -> publicação na fila -> HTTP 200 OK para o Telegram
+Telegram -> webhook | notification-api -> validação/processamento inicial -> publicação na fila -> HTTP 200 OK para o Telegram
 
 Após a mensagem ser publicada, o finance-api pode processá-la de forma assíncrona.
 
@@ -47,7 +47,7 @@ Essa decisão adiciona complexidade ao projeto, já que passa a ser necessário 
 
 # Arquitetura
 O sistema é divido em três serviços com responsabilidades diferentes
-Telegram -> notification-api -> Message Broker -> finance-api -> PostgreSQL -> APIs externas
+Telegram -> API-Gateway -> notification-api -> Message Broker -> finance-api -> PostgreSQL e APIs externas
 
 O notification-api é responsável pela comunicação com o Telegram -> validar a mensagem e publicar na fila de gasto ou de relatório.
 
