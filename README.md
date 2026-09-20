@@ -16,7 +16,7 @@ O objetivo não é criar a arquitetura mais simples possível, mas utilizar um p
 ## Tópicos de estudo que foram e vão ser implementados 
 - Arquitetura Limpa
 - SOLID
-- Banco de dados (N+1, JPA/Hibernate, Indices, Lock, (pessimista e otimista), )
+- Banco de dados (N+1, JPA/Hibernate, Indices, Lock pessimista e otimista)
 - Java (conceitos básicos, threads, concorrência, paralelismo)
 - Spring Boot (Container do spring, anotações, 
 - FeingClient
@@ -29,19 +29,15 @@ O objetivo não é criar a arquitetura mais simples possível, mas utilizar um p
 - Fila, Retry/Backof, DLQ
 - Observabilidade
 
-
-## Escolhas e Tradeoffs
-O projeto ele tem como o objetivo ser um laboratório, portanto as escolhas aqui foram feitas para poder aprender certos conceitos, mesmo sabendo que não seria necessário a implementação por ser tratar de um projeto simples e com baixo volume, mas as escolhas feitas aqui vão me ajudar a aprimorar e entender conceitos para projto maiores.
-
-#### Escolhas
-Motivo de escolher comunicação assíncrona com fila entre o notification-api e o finance-pai: Essa escolha surgiu por dois motivos principais, o primeiro é o desacoplamento que a fila traz de um serviço para o outro, fazendo a mensagem ser processada de forma assíncrona além de que todo o processo com o **rest** poderia ser demorado para entregar o status necessário para fechar a comunicação do webhook do telegram 
+#### Escolhas e Tradeoffs
+**Motivo de escolher comunicação assíncrona com fila entre o notification-api e o finance-pai**: Essa escolha surgiu por dois motivos principais, o primeiro é o desacoplamento que a fila traz de um serviço para o outro, fazendo a mensagem ser processada de forma assíncrona além de que todo o processo com o **rest** poderia ser demorado para entregar o status necessário para fechar a comunicação do webhook do telegram com o notification-api. O notification ele recebe a mensagem do telegram pelo webhook e validar/processa a mensagem e publica na fila. O fim desse processo retorna o 200 Ok para o telegram. 
 
 
 # Arquitetura
 O sistema é divido em três serviços com responsabilidades diferentes
 Telegram -> notification-api -> Message Broker -> finance-api -> PostgreSQL -> APIs externas
 
-O notification-api é responsável principalmente pela comunicação com o Telegram.
+O notification-api é responsável pela comunicação com o Telegram -> validar a mensagem e publicar na fila de gasto ou de relatório.
 
 O finance-api concentra as regras de negócio relacionadas ao gerenciamento financeiro, como:
 
@@ -51,7 +47,7 @@ categorização;
 geração de relatórios;
 persistência dos dados;
 integração com serviços externos.
-Criação de usuários
+E também na criação de usuários pelo chat_id vindo do telegram
 
 ## Evolução da arquitetura
 
