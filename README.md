@@ -39,15 +39,7 @@ A escolha pela comunicação assíncrona utilizando filas surgiu principalmente 
 
 O fluxo funciona da seguinte forma:
 
-Telegram
-    ↓
-notification-api
-    ↓
-validação/processamento inicial
-    ↓
-publicação na fila
-    ↓
-HTTP 200 OK para o Telegram
+Telegram -> notification-api -> validação/processamento inicial -> publicação na fila -> HTTP 200 OK para o Telegram
 
 Após a mensagem ser publicada, o finance-api pode processá-la de forma assíncrona.
 
