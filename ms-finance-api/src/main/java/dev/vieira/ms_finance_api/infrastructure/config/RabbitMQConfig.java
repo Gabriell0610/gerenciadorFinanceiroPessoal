@@ -1,10 +1,7 @@
 package dev.vieira.ms_finance_api.infrastructure.config;
 
 
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.BindingBuilder;
-import org.springframework.amqp.core.DirectExchange;
-import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.*;
 import org.springframework.amqp.support.converter.JacksonJsonMessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,6 +20,24 @@ public class RabbitMQConfig {
     public static final String EXCHANGE = "notification.exchange";
     public static final String QUEUE_NOTIFICATION_RESPONSE = "notification.response.queue";
     public static final String ROUTING_KEY_NOTIFICATION_RESPONSE = "notification.response";
+
+    //DQL
+    public static final String QUEUE_NOTION_DEAD = "notion.dead.queue";
+    public static final String ROUTING_KEY_NOTION_DEAD = "notion.dead";
+
+
+    @Bean
+    public Queue notionDeadQueue() {
+        return QueueBuilder.durable(QUEUE_NOTION_DEAD).build();
+    }
+
+    @Bean
+    public Binding notionDeadBinding(Queue notionDeadQueue) {
+        return BindingBuilder
+                .bind(notionDeadQueue)
+                .to(new DirectExchange(EXCHANGE))
+                .with(ROUTING_KEY_NOTION_DEAD);
+    }
 
 
     @Bean

@@ -9,6 +9,7 @@ public class Expense {
 
     private final UUID id;
     private UUID userId;
+    private UUID cardId;
     private BigDecimal amount;
     private LocalDate dateExpense;
     private String messageUser;
@@ -31,9 +32,10 @@ public class Expense {
     }
 
     public Expense(UUID id, UUID userId, BigDecimal amount, String messageUser, String description,
-                   Integer installment,LocalDate dateExpense, LocalDateTime created_at, String category ) {
+                   Integer installment,LocalDate dateExpense, LocalDateTime created_at, String category, UUID cardId ) {
         this.id = id; // Mantém o ID que veio do banco
         this.userId = userId;
+        this.cardId = cardId;
         this.amount = amount;
         this.messageUser = messageUser;
         this.description = description;
@@ -49,6 +51,10 @@ public class Expense {
 
     public UUID getUserId() {
         return userId;
+    }
+
+    public UUID getCardId() {
+        return cardId;
     }
 
     public BigDecimal getAmount() {

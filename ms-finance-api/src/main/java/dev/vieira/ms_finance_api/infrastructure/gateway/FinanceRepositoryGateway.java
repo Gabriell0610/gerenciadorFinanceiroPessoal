@@ -23,8 +23,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static dev.vieira.ms_finance_api.infrastructure.config.RabbitMQConfig.EXCHANGE;
-import static dev.vieira.ms_finance_api.infrastructure.config.RabbitMQConfig.ROUTING_KEY_NOTIFICATION_RESPONSE;
+import static dev.vieira.ms_finance_api.infrastructure.config.RabbitMQConfig.*;
 
 @Slf4j
 @Component
@@ -63,7 +62,7 @@ public class FinanceRepositoryGateway implements FinanceGateway {
         var result =  userRepository.findUserByChatId(chatId)
                 .map(userMapper::toDomain);
 
-        FinanceRepositoryGateway.log.info("FinanceRepositoryGateway.findUserByChatId: result = " + result);
+        log.info("FinanceRepositoryGateway.findUserByChatId: result = {}", result);
         return result;
     }
 
@@ -97,8 +96,8 @@ public class FinanceRepositoryGateway implements FinanceGateway {
     }
 
     @Override
-    public List<Expense> findAllExpenseByUserId(UUID userId) {
-        return expenseRepository.findAllByUserId(userId)
+    public List<Expense> findAllUserExpenseWithCompetency(UUID userId, LocalDate competency) {
+        return expenseRepository.findAllUserExpenseWithCompetency(userId, competency)
                 .stream()
                 .map(expenseEntity -> new Expense(
                         expenseEntity.getId(),

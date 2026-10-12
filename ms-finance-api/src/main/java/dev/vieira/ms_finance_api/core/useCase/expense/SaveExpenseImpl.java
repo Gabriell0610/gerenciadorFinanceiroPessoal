@@ -18,7 +18,7 @@ public class SaveExpenseImpl implements SaveExpenseUseCase {
 
     @Override
     public Expense execute(User user, TelegramUpdateDto payload, ParsedExpenseDto parsed) {
-
+        System.out.println("Salvando gasto no banco");
         var installment = 1;
         if(parsed.installments() > 1) {
             installment = parsed.installments();

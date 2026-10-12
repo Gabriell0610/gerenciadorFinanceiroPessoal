@@ -5,7 +5,7 @@ import dev.vieira.ms_finance_api.core.dto.TelegramDto.TelegramUpdateDto;
 import dev.vieira.ms_finance_api.core.entities.Expense;
 import dev.vieira.ms_finance_api.core.entities.Report;
 import dev.vieira.ms_finance_api.core.gateway.FinanceGateway;
-import dev.vieira.ms_finance_api.core.useCase.expense.FindAllExpenseByUserIdUseCase;
+import dev.vieira.ms_finance_api.core.useCase.expense.FindAllExpenseByUserIdWithCompetencyUseCase;
 import dev.vieira.ms_finance_api.core.useCase.report.contract.*;
 import dev.vieira.ms_finance_api.core.useCase.user.FindUserByChatIdUseCase;
 
@@ -20,27 +20,23 @@ import java.util.UUID;
 public class ProcessReportImpl implements ProcessReportUseCase {
 
     private final FindUserByChatIdUseCase findUserByChatIdUseCase;
-    private final FindAllExpenseByUserIdUseCase findAllExpenseByUserIdUseCase;
+    private final FindAllExpenseByUserIdWithCompetencyUseCase findAllExpenseByUserIdWithCompetencyUseCase;
     private final FindReportByUserAndCompetencyUseCase findReportByUserAndCompetencyUseCase;
     private final SaveReportUseCase saveReportUseCase;
     private final SendNotificationUseCase sendNotificationUseCase;
-    private final ReportArchiveUseCase reportArchiveUseCase;
-    private final FinanceGateway financeGateway;
 
     public ProcessReportImpl(FindUserByChatIdUseCase findUserByChatIdUseCase,
-                             FindAllExpenseByUserIdUseCase findAllReportsByUserIdUseCase,
+                             FindAllExpenseByUserIdWithCompetencyUseCase findAllExpenseByUserIdWithCompetencyUseCase,
                              SaveReportUseCase saveReportUseCase,
                              FindReportByUserAndCompetencyUseCase findReportByUserAndCompetencyUseCase,
                              SendNotificationUseCase sendNotificationUseCase,
                              ReportArchiveUseCase reportArchiveUseCase,
                              FinanceGateway financeGateway) {
         this.findUserByChatIdUseCase = findUserByChatIdUseCase;
-        this.findAllExpenseByUserIdUseCase = findAllReportsByUserIdUseCase;
+        this.findAllExpenseByUserIdWithCompetencyUseCase = findAllExpenseByUserIdWithCompetencyUseCase;
         this.saveReportUseCase = saveReportUseCase;
         this.findReportByUserAndCompetencyUseCase = findReportByUserAndCompetencyUseCase;
         this.sendNotificationUseCase = sendNotificationUseCase;
-        this.reportArchiveUseCase = reportArchiveUseCase;
-        this.financeGateway = financeGateway;
     }
 
     @Override
@@ -57,11 +53,9 @@ public class ProcessReportImpl implements ProcessReportUseCase {
         LocalDate competency = LocalDate.now(ZoneId.of("America/Sao_Paulo"))
                 .withDayOfMonth(1);
 
-        var allExpenses = this.findAllExpenseByUserIdUseCase.execute(user.get().getId());
-        System.out.println("Gastos do usuário:  " + allExpenses);
+        //filtra os gastos do usuário no mês atual
+        var monthlyExpenses = this.findAllExpenseByUserIdWithCompetencyUseCase.execute(user.get().getId(), competency);
 
-        //filtra só os que aparecem no mês da competência
-        var monthlyExpenses = filterMonthlyExpenses(allExpenses, competency);
         System.out.println("Gastos do usuário no mês da competência:  " + monthlyExpenses);
 
         BigDecimal totalExpenses = calculateExpenseByInstallment(monthlyExpenses, 1);
@@ -84,26 +78,6 @@ public class ProcessReportImpl implements ProcessReportUseCase {
         );
 
         sendNotificationUseCase.execute(notificationResponseDto);
-
-//        //byte[] csv = reportArchiveUseCase.process(report, monthlyExpenses);
-//
-//        //financeGateway.sendReportFile(csv, payload.message().chat().id());
-//
-//        Files.write(Path.of("relatorio.csv"), csv);
-//        System.out.println("CSV gerado em: " + Path.of("relatorio.csv").toAbsolutePath());
-//        System.out.println(new String(csv, StandardCharsets.UTF_8));
-    }
-
-    private List<Expense> filterMonthlyExpenses(List<Expense> expenses, LocalDate competency) {
-        return expenses.stream()
-                .filter(expense -> {
-                    long mesesPassados = Period.between(
-                            expense.getCreated_at().toLocalDate().withDayOfMonth(1),
-                            competency
-                    ).toTotalMonths();
-                    return mesesPassados >= 0 && mesesPassados < expense.getInstallment();
-                })
-                .toList();
     }
 
     private BigDecimal calculateExpenseByInstallment(List<Expense> expenses, int minInstallment) {

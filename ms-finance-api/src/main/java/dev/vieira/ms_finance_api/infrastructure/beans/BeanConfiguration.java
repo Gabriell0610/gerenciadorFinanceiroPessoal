@@ -3,7 +3,7 @@ package dev.vieira.ms_finance_api.infrastructure.beans;
 
 import dev.vieira.ms_finance_api.core.gateway.ExpenseExporterGateway;
 import dev.vieira.ms_finance_api.core.gateway.FinanceGateway;
-import dev.vieira.ms_finance_api.core.gateway.PromptFinanceGatewayImpl;
+import dev.vieira.ms_finance_api.core.gateway.ParsedMessageGateway;
 import dev.vieira.ms_finance_api.core.useCase.expense.*;
 import dev.vieira.ms_finance_api.core.useCase.process.ProcessMessageImpl;
 import dev.vieira.ms_finance_api.core.useCase.process.ProcessMessageUseCase;
@@ -15,7 +15,6 @@ import dev.vieira.ms_finance_api.core.useCase.user.SaveUserImpl;
 import dev.vieira.ms_finance_api.core.useCase.user.SaveUserUseCase;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import tools.jackson.databind.ObjectMapper;
 
 @Configuration
 public class BeanConfiguration {
@@ -25,14 +24,12 @@ public class BeanConfiguration {
                                                                ProcessReportUseCase processReportUseCase,
                                                                FindUserByChatIdUseCase findUserByChatIdUseCase,
                                                                ExpenseExporterGateway expenseExporterGateway,
-                                                               ObjectMapper objectMapper,
-                                                               PromptFinanceGatewayImpl promptFinanceGateway) {
+                                                               ParsedMessageGateway parsedMessageGateway) {
         return new ProcessMessageImpl(saveUserUseCase, saveExpenseUseCase,
                 processReportUseCase,
                 findUserByChatIdUseCase,
                 expenseExporterGateway,
-                objectMapper,
-                promptFinanceGateway);
+                parsedMessageGateway);
     }
 
     @Bean
@@ -47,14 +44,14 @@ public class BeanConfiguration {
 
     @Bean
     public ProcessReportUseCase processReportUseCase(FindUserByChatIdUseCase findUserByChatIdUseCase,
-                                                     FindAllExpenseByUserIdUseCase findAllExpenseByUserIdUseCase,
+                                                     FindAllExpenseByUserIdWithCompetencyUseCase findAllExpenseByUserIdWithCompetencyUseCase,
                                                      SaveReportUseCase saveReportUseCase,
                                                      FindReportByUserAndCompetencyUseCase findReportByUserAndCompetencyUseCase,
                                                      SendNotificationUseCase sendNotificationUseCase,
                                                      ReportArchiveUseCase reportArchiveUseCase,
                                                      FinanceGateway financeGateway) {
         return new ProcessReportImpl(findUserByChatIdUseCase,
-                findAllExpenseByUserIdUseCase,
+                findAllExpenseByUserIdWithCompetencyUseCase,
                 saveReportUseCase,
                 findReportByUserAndCompetencyUseCase,sendNotificationUseCase, reportArchiveUseCase, financeGateway);
     }
@@ -81,8 +78,8 @@ public class BeanConfiguration {
     }
 
     @Bean
-    FindAllExpenseByUserIdUseCase findAllExpenseByUserIdUseCase(FinanceGateway financeGateway) {
-        return new FindAllExpenseByUserIdImpl(financeGateway);
+    FindAllExpenseByUserIdWithCompetencyUseCase findAllExpenseByUserIdWithCompetencyUseCase(FinanceGateway financeGateway) {
+        return new FindAllExpenseByUserIdWithCompetencyImpl(financeGateway);
     }
 
     @Bean SendNotificationUseCase sendNotificationUseCase(FinanceGateway financeGateway) {

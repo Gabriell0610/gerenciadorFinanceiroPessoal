@@ -2,10 +2,12 @@ package dev.vieira.ms_finance_api.infrastructure.gateway;
 
 import dev.vieira.ms_finance_api.core.entities.Expense;
 import dev.vieira.ms_finance_api.core.gateway.ExpenseExporterGateway;
-import dev.vieira.ms_finance_api.infrastructure.resources.client.NotionClient;
 import dev.vieira.ms_finance_api.infrastructure.dto.NotionDto.NotionPageRequest;
 import dev.vieira.ms_finance_api.infrastructure.dto.NotionDto.NotionPageRequest.*;
+import dev.vieira.ms_finance_api.infrastructure.resources.client.NotionClient;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -13,11 +15,16 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
+import static dev.vieira.ms_finance_api.infrastructure.config.RabbitMQConfig.EXCHANGE;
+import static dev.vieira.ms_finance_api.infrastructure.config.RabbitMQConfig.ROUTING_KEY_NOTION_DEAD;
+
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class NotionExpenseExporterGateway implements ExpenseExporterGateway {
 
     private final NotionClient notionClient;
+    private final RabbitTemplate rabbitTemplate;
 
     @Value("${notion.token}")
     private String token;
@@ -54,17 +61,17 @@ public class NotionExpenseExporterGateway implements ExpenseExporterGateway {
 
         var request = new NotionPageRequest(parent, properties);
 
-        // 2. Dispara via OpenFeign
         try {
+            log.info("[Notion] Iniciando processo com notion!");
             String authorizationHeader = "Bearer " + token;
             String notionVersion = "2025-09-03";
 
             notionClient.createPage(authorizationHeader, notionVersion, request);
-            System.out.println("[Notion] Gasto espelhado com sucesso!");
+            log.info("[Notion] Gasto espelhado com sucesso!");
 
         } catch (Exception e) {
-            // Tratamento de erro (Se falhar aqui, o Postgres já salvou, seu dado está seguro!)
-            System.err.println("[Notion] Falha ao exportar para o Notion: " + e.getMessage());
+            log.error("[Notion] Falha ao espelhar dados no notion: {}", e.getMessage());
+            rabbitTemplate.convertAndSend(EXCHANGE, ROUTING_KEY_NOTION_DEAD, expense);
         }
     }
 }

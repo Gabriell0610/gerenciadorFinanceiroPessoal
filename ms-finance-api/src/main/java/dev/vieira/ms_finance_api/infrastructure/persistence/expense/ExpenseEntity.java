@@ -1,5 +1,6 @@
 package dev.vieira.ms_finance_api.infrastructure.persistence.expense;
 
+import dev.vieira.ms_finance_api.infrastructure.persistence.Card.CardEntity;
 import dev.vieira.ms_finance_api.infrastructure.persistence.user.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -45,6 +46,11 @@ public class ExpenseEntity implements Persistable<UUID> {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "card_id", nullable = false)
+    private CardEntity card;
+
 
     @Transient
     @Builder.Default

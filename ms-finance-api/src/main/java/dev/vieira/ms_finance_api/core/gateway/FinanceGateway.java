@@ -7,6 +7,7 @@ import dev.vieira.ms_finance_api.core.entities.Report;
 import dev.vieira.ms_finance_api.core.entities.User;
 import dev.vieira.ms_finance_api.infrastructure.dto.GeminiDto.GeminiResponseDto;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -19,7 +20,7 @@ public interface FinanceGateway {
 
     Expense saveExpense(Expense expense);
     Optional<Expense> findExpenseById(UUID expenseId);
-    List<Expense> findAllExpenseByUserId(UUID userId);
+    List<Expense> findAllUserExpenseWithCompetency(UUID userId, LocalDate competency);
 
     Report saveReport(Report report);
     Optional<Report> findReportByUserAndCompetency(UUID userId, java.time.LocalDate competency);

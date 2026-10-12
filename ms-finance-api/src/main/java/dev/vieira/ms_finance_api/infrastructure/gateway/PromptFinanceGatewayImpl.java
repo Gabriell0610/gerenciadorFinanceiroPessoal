@@ -1,10 +1,12 @@
 package dev.vieira.ms_finance_api.infrastructure.gateway;
 
-import dev.vieira.ms_finance_api.core.gateway.PromptFinanceGatewayImpl;
+import dev.vieira.ms_finance_api.core.exception.ExternalServiceException;
+import dev.vieira.ms_finance_api.core.gateway.PromptFinanceGateway;
 import dev.vieira.ms_finance_api.infrastructure.dto.GeminiDto.GeminiRequestDto;
 import dev.vieira.ms_finance_api.infrastructure.dto.GeminiDto.GeminiResponseDto;
 import dev.vieira.ms_finance_api.infrastructure.resources.client.GeminiClient;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -13,7 +15,8 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class PromptFinanceGateway implements PromptFinanceGatewayImpl {
+@Slf4j
+public class PromptFinanceGatewayImpl implements PromptFinanceGateway {
 
     private final GeminiClient geminiClient;
 
@@ -61,14 +64,13 @@ public class PromptFinanceGateway implements PromptFinanceGatewayImpl {
 
         try {
             var result = geminiClient.generate(apiKey, request);
-            System.out.println("Resultado da api do gmini: " + result);
             return result;
         }catch(Exception e) {
-            System.out.println("[GEMINI] Falha ao processar mensagem: " + e.getMessage());
-            throw new RuntimeException("Falha ao processar mensagem com Gemini", e);
+            log.error("[GEMINI] Erro ao comunicar com Gemini", e);
+
+            throw new ExternalServiceException(
+                    "Não foi possível processar a mensagem."
+            );
         }
     }
-
-
-
 }

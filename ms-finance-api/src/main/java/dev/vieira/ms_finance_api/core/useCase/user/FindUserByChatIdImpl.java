@@ -1,6 +1,7 @@
 package dev.vieira.ms_finance_api.core.useCase.user;
 
 import dev.vieira.ms_finance_api.core.entities.User;
+import dev.vieira.ms_finance_api.core.exception.BusinessException;
 import dev.vieira.ms_finance_api.core.gateway.FinanceGateway;
 
 import java.util.Optional;
