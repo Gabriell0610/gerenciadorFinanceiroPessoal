@@ -18,10 +18,11 @@ public class Expense {
     private Integer installment;
     private String category;
 
-    public Expense(UUID userId, BigDecimal amount, String messageUser,
+    public Expense(UUID userId, UUID cardId, BigDecimal amount, String messageUser,
                    String description, Integer installment, String category, LocalDate paymentDate) {
         this.id = UUID.randomUUID(); // Sistema gera o ID único agora
         this.userId = userId;
+        this.cardId = cardId;
         this.amount = amount;
         this.messageUser = messageUser;
         this.description = description;
@@ -31,8 +32,8 @@ public class Expense {
         this.category = category;
     }
 
-    public Expense(UUID id, UUID userId, BigDecimal amount, String messageUser, String description,
-                   Integer installment,LocalDate dateExpense, LocalDateTime created_at, String category, UUID cardId ) {
+    public Expense(UUID id, UUID userId, UUID cardId, BigDecimal amount, String messageUser, String description,
+                   Integer installment,LocalDate dateExpense, LocalDateTime created_at, String category) {
         this.id = id; // Mantém o ID que veio do banco
         this.userId = userId;
         this.cardId = cardId;

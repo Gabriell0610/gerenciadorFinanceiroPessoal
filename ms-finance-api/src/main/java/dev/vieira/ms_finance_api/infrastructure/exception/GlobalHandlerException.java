@@ -4,7 +4,7 @@ package dev.vieira.ms_finance_api.infrastructure.exception;
 import dev.vieira.ms_finance_api.core.exception.BusinessException;
 import dev.vieira.ms_finance_api.core.exception.ExternalServiceException;
 import dev.vieira.ms_finance_api.infrastructure.dto.ResponseDTO;
-import dev.vieira.ms_finance_api.infrastructure.enums.ResponseType;
+import dev.vieira.ms_finance_api.core.enums.ResponseType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -54,3 +54,4 @@ public class GlobalHandlerException {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }
 }
+

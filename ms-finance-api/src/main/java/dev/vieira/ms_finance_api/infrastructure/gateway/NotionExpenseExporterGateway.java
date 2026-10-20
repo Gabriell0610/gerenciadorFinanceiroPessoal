@@ -25,6 +25,7 @@ public class NotionExpenseExporterGateway implements ExpenseExporterGateway {
 
     private final NotionClient notionClient;
     private final RabbitTemplate rabbitTemplate;
+    private final String NOTION_VERSION = "2025-09-03";
 
     @Value("${notion.token}")
     private String token;
@@ -64,9 +65,8 @@ public class NotionExpenseExporterGateway implements ExpenseExporterGateway {
         try {
             log.info("[Notion] Iniciando processo com notion!");
             String authorizationHeader = "Bearer " + token;
-            String notionVersion = "2025-09-03";
 
-            notionClient.createPage(authorizationHeader, notionVersion, request);
+            notionClient.createPage(authorizationHeader, NOTION_VERSION, request);
             log.info("[Notion] Gasto espelhado com sucesso!");
 
         } catch (Exception e) {

@@ -8,6 +8,7 @@ public record ParsedExpenseDto(
         BigDecimal amount,
         String category,
         int installments,
-        LocalDate paymentDate) {
+        LocalDate paymentDate,
+        String cardName) {
     
 }

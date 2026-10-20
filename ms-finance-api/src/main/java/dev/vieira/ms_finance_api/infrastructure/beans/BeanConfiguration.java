@@ -1,9 +1,12 @@
 package dev.vieira.ms_finance_api.infrastructure.beans;
 
 
+import dev.vieira.ms_finance_api.core.entities.Card;
 import dev.vieira.ms_finance_api.core.gateway.ExpenseExporterGateway;
 import dev.vieira.ms_finance_api.core.gateway.FinanceGateway;
 import dev.vieira.ms_finance_api.core.gateway.ParsedMessageGateway;
+import dev.vieira.ms_finance_api.core.useCase.Card.CardImpl;
+import dev.vieira.ms_finance_api.core.useCase.Card.CardUseCase;
 import dev.vieira.ms_finance_api.core.useCase.expense.*;
 import dev.vieira.ms_finance_api.core.useCase.process.ProcessMessageImpl;
 import dev.vieira.ms_finance_api.core.useCase.process.ProcessMessageUseCase;
@@ -24,12 +27,14 @@ public class BeanConfiguration {
                                                                ProcessReportUseCase processReportUseCase,
                                                                FindUserByChatIdUseCase findUserByChatIdUseCase,
                                                                ExpenseExporterGateway expenseExporterGateway,
-                                                               ParsedMessageGateway parsedMessageGateway) {
+                                                               ParsedMessageGateway parsedMessageGateway,
+                                                               CardUseCase cardUseCase) {
         return new ProcessMessageImpl(saveUserUseCase, saveExpenseUseCase,
                 processReportUseCase,
                 findUserByChatIdUseCase,
                 expenseExporterGateway,
-                parsedMessageGateway);
+                parsedMessageGateway,
+                cardUseCase);
     }
 
     @Bean
@@ -84,6 +89,10 @@ public class BeanConfiguration {
 
     @Bean SendNotificationUseCase sendNotificationUseCase(FinanceGateway financeGateway) {
         return new SendNotification(financeGateway);
+    }
+
+    @Bean CardUseCase cardUseCase(FinanceGateway financeGateway) {
+        return new CardImpl(financeGateway);
     }
 
 }

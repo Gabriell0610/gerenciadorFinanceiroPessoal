@@ -48,7 +48,7 @@ public class ExpenseEntity implements Persistable<UUID> {
     private UserEntity user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "card_id", nullable = false)
+    @JoinColumn(name = "card_id")
     private CardEntity card;
 
 

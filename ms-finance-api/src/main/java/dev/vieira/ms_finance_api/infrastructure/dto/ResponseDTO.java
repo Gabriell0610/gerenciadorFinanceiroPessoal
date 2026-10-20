@@ -1,6 +1,6 @@
 package dev.vieira.ms_finance_api.infrastructure.dto;
 
-import dev.vieira.ms_finance_api.infrastructure.enums.ResponseType;
+import dev.vieira.ms_finance_api.core.enums.ResponseType;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.http.HttpStatus;

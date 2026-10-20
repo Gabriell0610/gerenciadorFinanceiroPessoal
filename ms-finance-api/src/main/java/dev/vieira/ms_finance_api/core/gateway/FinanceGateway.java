@@ -1,10 +1,9 @@
 package dev.vieira.ms_finance_api.core.gateway;
 
 import dev.vieira.ms_finance_api.core.dto.Report.NotificationResponseDto;
-import dev.vieira.ms_finance_api.core.entities.Category;
-import dev.vieira.ms_finance_api.core.entities.Expense;
-import dev.vieira.ms_finance_api.core.entities.Report;
-import dev.vieira.ms_finance_api.core.entities.User;
+import dev.vieira.ms_finance_api.core.entities.*;
+import dev.vieira.ms_finance_api.infrastructure.dto.Card.CardDtoResponse;
+import dev.vieira.ms_finance_api.infrastructure.dto.Card.CreateCardDto;
 import dev.vieira.ms_finance_api.infrastructure.dto.GeminiDto.GeminiResponseDto;
 
 import java.time.LocalDate;
@@ -26,4 +25,7 @@ public interface FinanceGateway {
     Optional<Report> findReportByUserAndCompetency(UUID userId, java.time.LocalDate competency);
 
     void sendMessage(NotificationResponseDto message);
+
+    Optional<Card> findCardByUserIdAndNameCard(String cardName, UUID userId);
+    Card createCard(Card card);
 }

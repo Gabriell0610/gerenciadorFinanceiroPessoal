@@ -39,6 +39,7 @@ public class PromptFinanceGatewayImpl implements PromptFinanceGateway {
           "amount": valor numérico,
           "category": "categoria",
           "installments": número inteiro,
+          "cardName": nome do cartão que foi efetuado o pagamento,
           "paymentDate": "YYYY-MM-DD"
         }
         

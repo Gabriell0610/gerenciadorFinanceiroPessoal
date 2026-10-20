@@ -2,11 +2,16 @@ package dev.vieira.ms_finance_api.infrastructure.gateway;
 
 
 import dev.vieira.ms_finance_api.core.dto.Report.NotificationResponseDto;
+import dev.vieira.ms_finance_api.core.entities.Card;
 import dev.vieira.ms_finance_api.core.entities.Expense;
 import dev.vieira.ms_finance_api.core.entities.Report;
 import dev.vieira.ms_finance_api.core.entities.User;
 import dev.vieira.ms_finance_api.core.gateway.FinanceGateway;
+import dev.vieira.ms_finance_api.infrastructure.dto.Card.CardDtoResponse;
+import dev.vieira.ms_finance_api.infrastructure.dto.Card.CreateCardDto;
 import dev.vieira.ms_finance_api.infrastructure.mapper.UserMapper;
+import dev.vieira.ms_finance_api.infrastructure.persistence.Card.CardEntity;
+import dev.vieira.ms_finance_api.infrastructure.persistence.Card.CardRepository;
 import dev.vieira.ms_finance_api.infrastructure.persistence.expense.ExpenseEntity;
 import dev.vieira.ms_finance_api.infrastructure.persistence.expense.ExpenseRepository;
 import dev.vieira.ms_finance_api.infrastructure.persistence.report.ReportEntity;
@@ -35,6 +40,7 @@ public class FinanceRepositoryGateway implements FinanceGateway {
     private final UserMapper userMapper;
     private final ReportRepository reportRepository;
     private final RabbitTemplate rabbitTemplate;
+    private final CardRepository cardRepository;
 
     @Override
     public User saveUser(User user) {
@@ -102,6 +108,7 @@ public class FinanceRepositoryGateway implements FinanceGateway {
                 .map(expenseEntity -> new Expense(
                         expenseEntity.getId(),
                         expenseEntity.getUser().getId(),
+                        expenseEntity.getCard().getId(),
                         expenseEntity.getAmount(),
                         expenseEntity.getMessageUser(),
                         expenseEntity.getDescription(),
@@ -161,6 +168,43 @@ public class FinanceRepositoryGateway implements FinanceGateway {
                 message
         );
     }
+
+    @Override
+    public Optional<Card> findCardByUserIdAndNameCard(String cardName, UUID userId) {
+        return cardRepository.findByUser_IdAndName(userId, cardName)
+                .map(entity -> new Card(
+                        entity.getId(),
+                        entity.getInvoice(),
+                        entity.getUpdated_at(),
+                        entity.getCreated_at(),
+                        entity.getUser().getId(),
+                        entity.getName(),
+                        entity.getExpirationDate()
+                ));
+
+    }
+
+    @Override
+    public Card createCard(Card card) {
+        var userRef = userRepository.getReferenceById(card.getUserId());
+
+        var cardEntity = CardEntity.builder()
+                .id(card.getId())
+                .created_at(card.getCreated_at())
+                .updated_at(card.getUpdated_at())
+                .expirationDate(card.getDueDate())
+                .invoice(card.getInvoice())
+                .user(userRef)
+                .name(card.getName())
+                .build();
+
+       cardRepository.save(cardEntity);
+
+       return card;
+
+    }
+
+
 
 
 }

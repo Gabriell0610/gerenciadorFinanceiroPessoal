@@ -2,6 +2,7 @@ package dev.vieira.ms_finance_api.core.useCase.expense;
 
 import dev.vieira.ms_finance_api.core.dto.Expense.ParsedExpenseDto;
 import dev.vieira.ms_finance_api.core.dto.TelegramDto.TelegramUpdateDto;
+import dev.vieira.ms_finance_api.core.entities.Card;
 import dev.vieira.ms_finance_api.core.entities.Expense;
 import dev.vieira.ms_finance_api.core.entities.User;
 import dev.vieira.ms_finance_api.core.gateway.FinanceGateway;
@@ -17,7 +18,7 @@ public class SaveExpenseImpl implements SaveExpenseUseCase {
     }
 
     @Override
-    public Expense execute(User user, TelegramUpdateDto payload, ParsedExpenseDto parsed) {
+    public Expense execute(User user, TelegramUpdateDto payload, ParsedExpenseDto parsed, Card card) {
         System.out.println("Salvando gasto no banco");
         var installment = 1;
         if(parsed.installments() > 1) {
@@ -25,7 +26,7 @@ public class SaveExpenseImpl implements SaveExpenseUseCase {
         }
 
 
-        var expenseEntity = new Expense(user.getId(), parsed.amount(),
+        var expenseEntity = new Expense(user.getId(), card.getId(), parsed.amount(),
                 payload.message().text(), parsed.description(), installment, parsed.category(), parsed.paymentDate());
         return financeGateway.saveExpense(expenseEntity);
 
